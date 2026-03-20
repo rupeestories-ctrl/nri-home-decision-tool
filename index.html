@@ -1,0 +1,2231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NRI Home Decision Tool · RupeeStories</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #FFFBF5;
+  --cream-dark: #F3F0EA;
+  --navy: #151739;
+  --navy-mid: #1E2347;
+  --navy-light: #2C3360;
+  --saffron: #D7AE43;
+  --saffron-light: #E8C96A;
+  --gold: #D7AE43;
+  --gold-light: #F0DFA0;
+  --green: #2E7D52;
+  --green-light: #E8F5EE;
+  --red: #C0392B;
+  --red-light: #FDEDEC;
+  --amber: #B7620A;
+  --amber-light: #FEF3E2;
+  --text: #18203B;
+  --text-mid: #4A5275;
+  --text-light: #8891A8;
+  --border: #E2D8C8;
+  --shadow: 0 4px 24px rgba(21,23,57,0.08);
+  --shadow-lg: 0 12px 48px rgba(21,23,57,0.14);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* ─── HERO ─────────────────────────────────── */
+.hero {
+  background: var(--navy);
+  padding: 64px 24px 80px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; left: 50%; transform: translateX(-50%);
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(232,130,12,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-block;
+  background: rgba(232,130,12,0.15);
+  color: var(--saffron-light);
+  border: 1px solid rgba(232,130,12,0.3);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  margin-bottom: 20px;
+}
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(32px, 6vw, 52px);
+  color: #fff;
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+.hero h1 em { font-style: italic; color: var(--saffron-light); }
+.hero p {
+  color: #A9B0C8;
+  max-width: 560px;
+  margin: 0 auto 8px;
+  font-size: 15px;
+}
+.hero-chips {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  justify-content: center; margin-top: 24px;
+}
+.hero-chip {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 999px;
+  color: #C5CBE0;
+  font-size: 12px;
+  padding: 4px 12px;
+}
+
+/* ─── LAYOUT ────────────────────────────────── */
+.wrapper {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}
+
+/* ─── TABS ──────────────────────────────────── */
+.tab-nav {
+  display: flex;
+  background: var(--navy);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  position: sticky; top: 0; z-index: 100;
+}
+.tab-btn {
+  flex: 1; padding: 14px 8px;
+  background: none; border: none;
+  color: #6B7394; font-family: 'DM Sans', sans-serif;
+  font-size: 12px; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  cursor: pointer; transition: all 0.2s;
+  border-bottom: 2px solid transparent;
+  position: relative;
+}
+.tab-btn:hover { color: #A9B0C8; }
+.tab-btn.active { color: var(--saffron-light); border-bottom-color: var(--saffron); }
+.tab-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: rgba(232,130,12,0.15); color: var(--saffron-light);
+  font-size: 10px; margin-right: 6px;
+}
+.tab-btn.active .tab-num { background: var(--saffron); color: #fff; }
+
+/* ─── CARDS ─────────────────────────────────── */
+.section-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 24px;
+}
+@media(max-width: 640px) { .section-grid { grid-template-columns: 1fr; } }
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+.card-full { grid-column: 1 / -1; }
+
+.section-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 20px;
+}
+.section-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--cream-dark);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.section-header h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px; font-weight: 600;
+  color: var(--navy);
+}
+.section-header p { font-size: 12px; color: var(--text-light); }
+
+/* ─── FORM ELEMENTS ──────────────────────────── */
+.field { margin-bottom: 16px; }
+.field label {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 600;
+  color: var(--text-mid); margin-bottom: 6px;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.field label .tip {
+  background: var(--cream-dark); color: var(--text-light);
+  border-radius: 999px; font-size: 10px; padding: 1px 7px;
+  font-weight: 500; text-transform: none; letter-spacing: 0;
+  cursor: default;
+}
+.field input, .field select {
+  width: 100%; padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-family: 'DM Mono', monospace;
+  font-size: 14px; color: var(--text);
+  background: var(--cream);
+  transition: border-color 0.2s;
+  appearance: none;
+}
+.field input:focus, .field select:focus {
+  outline: none; border-color: var(--saffron); background: #fff;
+}
+.field .prefix-wrap { position: relative; }
+.field .prefix {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  font-size: 14px; color: var(--text-light); pointer-events: none;
+  font-family: 'DM Sans', sans-serif; font-weight: 600;
+}
+.field .prefix-wrap input { padding-left: 26px; }
+.field .suffix-wrap { position: relative; }
+.field .suffix {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  font-size: 13px; color: var(--text-light); pointer-events: none;
+}
+.field .suffix-wrap input { padding-right: 32px; }
+
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* Radio group */
+.radio-group { display: flex; flex-wrap: wrap; gap: 8px; }
+.radio-option { cursor: pointer; }
+.radio-option input { display: none; }
+.radio-option span {
+  display: block; padding: 8px 14px;
+  border: 1.5px solid var(--border); border-radius: 999px;
+  font-size: 13px; font-weight: 500; color: var(--text-mid);
+  transition: all 0.15s;
+}
+.radio-option input:checked + span {
+  background: var(--navy); color: #fff; border-color: var(--navy);
+}
+
+/* Slider */
+.slider-field input[type=range] {
+  -webkit-appearance: none; width: 100%;
+  height: 4px; border-radius: 4px; outline: none;
+  background: linear-gradient(to right, var(--saffron) 0%, var(--saffron) var(--pct, 50%), var(--border) var(--pct, 50%));
+  cursor: pointer;
+}
+.slider-field input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 18px; height: 18px;
+  border-radius: 50%; background: var(--navy);
+  border: 3px solid var(--saffron); cursor: pointer;
+}
+.slider-val {
+  font-family: 'DM Mono', monospace;
+  font-size: 15px; font-weight: 500;
+  color: var(--saffron); text-align: right;
+  margin-bottom: 8px;
+}
+
+.hint {
+  font-size: 11px; color: var(--text-light);
+  margin-top: 4px; line-height: 1.4;
+}
+
+/* ─── ANALYZE BUTTON ────────────────────────── */
+.analyze-wrap {
+  text-align: center; margin-top: 32px;
+}
+.btn-analyze {
+  background: var(--saffron);
+  color: #fff;
+  border: none; border-radius: 999px;
+  padding: 16px 48px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px; font-weight: 700;
+  cursor: pointer; letter-spacing: 0.02em;
+  box-shadow: 0 8px 32px rgba(232,130,12,0.35);
+  transition: all 0.2s;
+}
+.btn-analyze:hover { background: var(--amber); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(232,130,12,0.45); }
+.btn-analyze:active { transform: translateY(0); }
+
+/* ─── RESULTS ─────────────────────────────── */
+#results-section { display: none; margin-top: 32px; }
+
+.verdict-card {
+  border-radius: 20px;
+  padding: 32px;
+  text-align: center;
+  position: relative; overflow: hidden;
+  margin-bottom: 20px;
+}
+.verdict-card.buy { background: linear-gradient(135deg, #1B4332, #2E7D52); color: #fff; }
+.verdict-card.caution { background: linear-gradient(135deg, #7C4700, #B7620A); color: #fff; }
+.verdict-card.wait { background: linear-gradient(135deg, #7B1818, #C0392B); color: #fff; }
+.verdict-card::before {
+  content: ''; position: absolute; top: -40px; right: -40px;
+  width: 200px; height: 200px; border-radius: 50%;
+  background: rgba(255,255,255,0.05); pointer-events: none;
+}
+
+.verdict-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+  text-transform: uppercase; opacity: 0.7; margin-bottom: 8px;
+}
+.verdict-main {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(36px, 8vw, 64px);
+  font-weight: 700; line-height: 1;
+  margin-bottom: 12px;
+}
+.verdict-sub {
+  font-size: 15px; opacity: 0.85; max-width: 480px; margin: 0 auto 20px;
+}
+.score-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 999px; padding: 8px 20px;
+}
+.score-num { font-family: 'DM Mono', monospace; font-size: 22px; font-weight: 500; }
+.score-label { font-size: 12px; opacity: 0.8; }
+
+/* Metrics row */
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px; margin-bottom: 20px;
+}
+@media(max-width:700px){ .metrics-row { grid-template-columns: 1fr 1fr; } }
+
+.metric-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px; padding: 16px;
+  box-shadow: var(--shadow);
+}
+.metric-label { font-size: 11px; color: var(--text-light); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+.metric-val { font-family: 'DM Mono', monospace; font-size: 22px; font-weight: 500; color: var(--navy); }
+.metric-sub { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+.metric-card.highlight { background: var(--navy); border-color: var(--navy); }
+.metric-card.highlight .metric-label { color: rgba(255,255,255,0.5); }
+.metric-card.highlight .metric-val { color: var(--saffron-light); }
+.metric-card.highlight .metric-sub { color: rgba(255,255,255,0.4); }
+
+/* ─── COMPARISON TABLE ───────────────────────── */
+.compare-table { width: 100%; border-collapse: collapse; }
+.compare-table th {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--text-light); font-weight: 600;
+  padding: 8px 12px; text-align: right; border-bottom: 1px solid var(--border);
+}
+.compare-table th:first-child { text-align: left; }
+.compare-table td {
+  padding: 10px 12px; font-size: 14px;
+  border-bottom: 1px solid var(--cream-dark);
+}
+.compare-table td:first-child { font-weight: 500; color: var(--text-mid); }
+.compare-table td:not(:first-child) { text-align: right; font-family: 'DM Mono', monospace; font-size: 13px; }
+.compare-table tr:last-child td { border-bottom: none; font-weight: 700; color: var(--navy); }
+.compare-table .buy-col { color: var(--green); }
+.compare-table .rent-col { color: var(--saffron); }
+.compare-table .diff-col { }
+.better { color: var(--green); font-weight: 600; }
+.worse  { color: var(--red);   font-weight: 600; }
+
+/* ─── CHART ──────────────────────────────────── */
+.chart-wrap { position: relative; padding-top: 8px; }
+canvas { width: 100% !important; }
+.chart-legend {
+  display: flex; gap: 20px; justify-content: center;
+  margin-top: 12px;
+}
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-mid); }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+/* ─── SCENARIOS ───────────────────────────────── */
+.scenario-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media(max-width:640px){ .scenario-grid { grid-template-columns: 1fr; } }
+
+.scenario-card {
+  border-radius: 14px; padding: 18px;
+  border: 1.5px solid var(--border);
+}
+.scenario-card.green-bg { background: var(--green-light); border-color: #A8D5BB; }
+.scenario-card.amber-bg { background: var(--amber-light); border-color: #F5C98A; }
+.scenario-card.red-bg   { background: var(--red-light);   border-color: #F1A79E; }
+.scenario-title {
+  font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+.scenario-card.green-bg .scenario-title { color: var(--green); }
+.scenario-card.amber-bg .scenario-title { color: var(--amber); }
+.scenario-card.red-bg   .scenario-title { color: var(--red); }
+.scenario-val { font-family: 'DM Mono', monospace; font-size: 20px; font-weight: 500; color: var(--navy); margin-bottom: 4px; }
+.scenario-desc { font-size: 12px; color: var(--text-mid); line-height: 1.4; }
+
+/* ─── RISK FLAGS ────────────────────────────── */
+.risk-list { display: flex; flex-direction: column; gap: 10px; }
+.risk-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 14px; border-radius: 10px; border: 1px solid transparent;
+}
+.risk-item.risk-red { background: var(--red-light); border-color: #F1A79E; }
+.risk-item.risk-amber { background: var(--amber-light); border-color: #F5C98A; }
+.risk-item.risk-green { background: var(--green-light); border-color: #A8D5BB; }
+.risk-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  margin-top: 6px; flex-shrink: 0;
+}
+.risk-red .risk-dot { background: var(--red); }
+.risk-amber .risk-dot { background: var(--amber); }
+.risk-green .risk-dot { background: var(--green); }
+.risk-text { font-size: 13px; line-height: 1.4; }
+.risk-text strong { display: block; font-weight: 600; margin-bottom: 2px; }
+.risk-text span { color: var(--text-mid); font-size: 12px; }
+
+/* ─── BREAK EVEN BAND ────────────────────────── */
+.breakeven-band {
+  background: var(--navy); color: #fff;
+  border-radius: 14px; padding: 20px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+}
+.breakeven-band .be-val { font-family: 'DM Mono', monospace; font-size: 32px; color: var(--saffron-light); }
+.breakeven-band .be-label { font-size: 12px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.06em; }
+.breakeven-band .be-note { font-size: 13px; color: rgba(255,255,255,0.7); max-width: 340px; }
+
+/* ─── YEAR TABLE ─────────────────────────────── */
+.year-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.year-table th {
+  padding: 8px 10px; text-align: right;
+  background: var(--cream-dark); font-size: 11px;
+  text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-mid);
+}
+.year-table th:first-child { text-align: left; border-radius: 8px 0 0 8px; }
+.year-table th:last-child { border-radius: 0 8px 8px 0; }
+.year-table td { padding: 9px 10px; border-bottom: 1px solid var(--cream-dark); text-align: right; font-family: 'DM Mono', monospace; }
+.year-table td:first-child { text-align: left; font-family: 'DM Sans', sans-serif; font-weight: 600; color: var(--navy); }
+.year-table tr:last-child td { border-bottom: none; }
+.year-table .win { color: var(--green); font-weight: 600; }
+.year-table .lose { color: var(--red); }
+
+/* ─── FOOTNOTE ───────────────────────────────── */
+.footnote {
+  text-align: center; margin-top: 40px;
+  font-size: 12px; color: var(--text-light); line-height: 1.6;
+  border-top: 1px solid var(--border); padding-top: 24px;
+}
+
+/* ─── INPUT SUMMARY ──────────────────────────── */
+.isumm-item { }
+.isumm-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-light); margin-bottom: 2px; }
+.isumm-val   { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--navy); font-weight: 500; }
+@media(max-width:600px){ #input-summary { grid-template-columns: 1fr 1fr !important; } }
+
+/* ─── STRESS CARD ────────────────────────────── */
+.stress-card {
+  border-radius: 12px; padding: 16px 18px;
+  border: 1.5px solid var(--border); background: var(--cream);
+}
+.stress-card-title {
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; color: var(--navy); margin-bottom: 10px;
+  display: flex; align-items: center; gap: 6px;
+}
+.stress-row { display: flex; justify-content: space-between; font-size: 12.5px; margin-bottom: 5px; }
+.stress-row .sl { color: var(--text-light); }
+.stress-row .sv { font-family: 'DM Mono', monospace; font-weight: 500; color: var(--navy); font-size: 12px; }
+.stress-row .sv.bad  { color: var(--red); }
+.stress-row .sv.warn { color: var(--amber); }
+.stress-row .sv.ok   { color: var(--green); }
+.stress-note { font-size: 12px; color: var(--text-mid); line-height: 1.4; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+.btn-secondary {
+  background: none; border: 1.5px solid var(--navy);
+  color: var(--navy); border-radius: 999px;
+  padding: 10px 24px; font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-secondary:hover { background: var(--navy); color: #fff; }
+
+/* ─── GUIDE SECTION ─────────────────────────── */
+.guide-section {
+  background: var(--cream-dark);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 48px 24px;
+}
+.guide-inner {
+  max-width: 560px;
+  margin: 0;
+  padding-left: calc((100vw - 1040px) / 2 + 0px);
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+@media(max-width: 1080px) {
+  .guide-inner { padding-left: 24px; }
+}
+
+.guide-block { }
+.guide-block-title {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; color: var(--navy);
+  margin-bottom: 16px;
+}
+.guide-block-title .g-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--navy); color: var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; flex-shrink: 0;
+}
+.guide-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.guide-list li {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 13.5px; color: var(--text-mid); line-height: 1.45;
+}
+.guide-list li .gl-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  margin-top: 6px; flex-shrink: 0;
+}
+.guide-list.do li .gl-dot { background: var(--green); }
+.guide-list.dont li .gl-dot { background: var(--red); }
+.guide-list.how li .gl-dot { background: var(--gold); }
+
+.guide-divider { display: none; }
+
+/* ─── CASE STUDIES ──────────────────────────── */
+.cases-section {
+  max-width: 1040px;
+  margin: 40px auto 0;
+  padding: 0 20px;
+}
+.cases-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px; color: var(--navy);
+  margin-bottom: 6px;
+}
+.cases-sub { font-size: 14px; color: var(--text-light); margin-bottom: 24px; }
+
+.case-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+@media(max-width:700px){ .case-grid { grid-template-columns: 1fr; } }
+
+.case-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.case-card-top {
+  background: var(--navy);
+  padding: 20px 22px 16px;
+}
+.case-verdict-pill {
+  display: inline-block;
+  border-radius: 999px;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 3px 12px; margin-bottom: 10px;
+}
+.pill-buy   { background: rgba(46,125,82,0.25);  color: #6FDFAA; border: 1px solid rgba(46,125,82,0.4); }
+.pill-wait  { background: rgba(192,57,43,0.25);  color: #F4A09A; border: 1px solid rgba(192,57,43,0.4); }
+.pill-caution { background: rgba(183,98,10,0.25); color: #F5C98A; border: 1px solid rgba(183,98,10,0.4); }
+
+.case-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px; color: #fff; font-weight: 600; margin-bottom: 4px;
+}
+.case-profile { font-size: 12px; color: rgba(255,255,255,0.5); }
+
+.case-card-body { padding: 20px 22px; }
+.case-facts { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.case-fact {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12.5px;
+}
+.case-fact-label { color: var(--text-light); }
+.case-fact-val   { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--navy); font-weight: 500; }
+
+.case-score-bar-wrap {
+  margin-bottom: 14px;
+}
+.case-score-label {
+  display: flex; justify-content: space-between;
+  font-size: 11px; color: var(--text-light); margin-bottom: 5px;
+}
+.case-score-bar {
+  height: 6px; border-radius: 6px; background: var(--cream-dark); overflow: hidden;
+}
+.case-score-fill {
+  height: 100%; border-radius: 6px;
+  transition: width 0.6s ease;
+}
+.fill-buy  { background: var(--green); }
+.fill-wait { background: var(--red); }
+.fill-caution { background: var(--amber); }
+
+.case-why {
+  font-size: 13px; color: var(--text-mid); line-height: 1.55;
+  border-top: 1px solid var(--cream-dark);
+  padding-top: 14px; margin-top: 2px;
+}
+.case-why strong { color: var(--navy); display: block; margin-bottom: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+@media print {
+  .tab-nav, .btn-analyze, .btn-secondary, .preset-bar { display: none; }
+  #results-section { display: block !important; }
+}
+
+/* ─── PRESET BAR ─────────────────────────────── */
+.preset-bar {
+  background: var(--navy-mid);
+  padding: 12px 20px;
+  display: flex; align-items: center; gap: 10px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.preset-label {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.08em; color: rgba(255,255,255,0.35);
+  flex-shrink: 0;
+}
+.preset-btn {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 999px; color: #A9B0C8;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px; font-weight: 500;
+  padding: 5px 14px; cursor: pointer;
+  transition: all 0.15s;
+}
+.preset-btn:hover { background: rgba(215,174,67,0.15); border-color: rgba(215,174,67,0.4); color: var(--gold); }
+
+/* ─── CURRENCY TOGGLE ────────────────────────── */
+.currency-wrap {
+  display: flex; align-items: center; gap: 8px;
+  margin-left: auto;
+}
+.currency-label { font-size: 11px; color: rgba(255,255,255,0.35); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+.currency-toggle {
+  display: flex; background: rgba(255,255,255,0.06); border-radius: 999px; padding: 2px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.currency-opt {
+  padding: 4px 12px; border-radius: 999px;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  color: rgba(255,255,255,0.4); transition: all 0.15s;
+  background: none; border: none; font-family: 'DM Sans', sans-serif;
+}
+.currency-opt.active { background: var(--gold); color: var(--navy); }
+
+/* ─── CONFIDENCE BADGE ───────────────────────── */
+.confidence-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 999px; padding: 5px 14px;
+  font-size: 12px; color: rgba(255,255,255,0.8);
+  margin-top: 10px;
+}
+.conf-dot { width: 7px; height: 7px; border-radius: 50%; }
+.conf-high { background: #6FDFAA; }
+.conf-med  { background: #F5C98A; }
+.conf-low  { background: #F4A09A; }
+
+/* ─── EXPLANATION BLOCK ───────────────────────── */
+.explanation-list { display: flex; flex-direction: column; gap: 10px; }
+.expl-item {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 12px 14px; border-radius: 10px;
+  background: var(--cream); border: 1px solid var(--border);
+}
+.expl-num {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--navy); color: var(--gold);
+  font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.expl-text { font-size: 13.5px; line-height: 1.5; color: var(--text-mid); }
+.expl-text strong { color: var(--navy); }
+
+/* ─── SENSITIVITY TABLE ───────────────────────── */
+.sensitivity-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 10px;
+}
+.sens-card {
+  border-radius: 12px; padding: 14px 16px;
+  border: 1.5px solid var(--border); background: var(--cream);
+}
+.sens-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+.sens-card.sens-low .sens-label { color: var(--red); }
+.sens-card.sens-base .sens-label { color: var(--navy); border-color: var(--navy); background: var(--cream-dark); }
+.sens-card.sens-high .sens-label { color: var(--green); }
+.sens-row { display:flex; justify-content:space-between; font-size:12px; margin-bottom:3px; }
+.sens-row span:first-child { color: var(--text-light); }
+.sens-row span:last-child { font-family:'DM Mono',monospace; font-weight:500; color:var(--navy); font-size:12px; }
+.sens-verdict { margin-top:8px; font-size:12px; font-weight:700; padding:3px 10px; border-radius:999px; display:inline-block; }
+.sv-buy { background:var(--green-light); color:var(--green); }
+.sv-wait { background:var(--red-light); color:var(--red); }
+.sv-caution { background:var(--amber-light); color:var(--amber); }
+
+/* ─── NEXT STEPS ──────────────────────────────── */
+.next-steps { display:flex; flex-direction:column; gap:10px; }
+.next-item {
+  display:flex; gap:14px; align-items:flex-start;
+  padding:14px 16px; border-radius:12px;
+  border-left:3px solid var(--gold);
+  background:#fff; border-top:1px solid var(--border);
+  border-right:1px solid var(--border); border-bottom:1px solid var(--border);
+}
+.next-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
+.next-body strong { display:block; font-size:13px; font-weight:700; color:var(--navy); margin-bottom:3px; }
+.next-body span { font-size:13px; color:var(--text-mid); line-height:1.45; }
+
+/* ─── TAB PANES ──────────────────────────────── */
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.notice {
+  background: var(--amber-light); border: 1px solid #F5C98A;
+  border-radius: 10px; padding: 12px 16px;
+  font-size: 13px; color: var(--amber);
+  margin-bottom: 16px;
+}
+.notice strong { font-weight: 700; }
+
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">r/RupeeStories · Free Tool</div>
+  <h1>NRI <em>Home Decision</em> Tool</h1>
+  <p>Not just EMI math. A full buy-vs-rent analysis built for every scenario an NRI actually faces — visa risk, India return plans, forced exits, and opportunity cost.</p>
+</div>
+
+<!-- PRESET BAR -->
+<div class="preset-bar">
+  <span class="preset-label">Quick load:</span>
+  <button class="preset-btn" onclick="loadPreset('faang_h1b')">🏢 FAANG H-1B</button>
+  <button class="preset-btn" onclick="loadPreset('gc_stable')">✅ GC Holder</button>
+  <button class="preset-btn" onclick="loadPreset('india_return')">✈️ India Return Soon</button>
+  <button class="preset-btn" onclick="loadPreset('first_time')">🏠 First-Time Buyer</button>
+  <div class="currency-wrap">
+    <span class="currency-label">Display results in:</span>
+    <div class="currency-toggle">
+      <button class="currency-opt active" id="cur-usd" onclick="setCurrency('usd')">USD</button>
+      <button class="currency-opt" id="cur-inr" onclick="setCurrency('inr')">INR</button>
+    </div>
+    <span style="font-size:11px;color:rgba(255,255,255,0.25);margin-left:4px">· Enter all inputs in USD</span>
+  </div>
+</div>
+
+<!-- TABS -->
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab(0)"><span class="tab-num">1</span><span class="tab-label">Finances</span></button>
+  <button class="tab-btn" onclick="switchTab(1)"><span class="tab-num">2</span><span class="tab-label">Property</span></button>
+  <button class="tab-btn" onclick="switchTab(2)"><span class="tab-num">3</span><span class="tab-label">Market</span></button>
+  <button class="tab-btn" onclick="switchTab(3)"><span class="tab-num">4</span><span class="tab-label">Life Plans</span></button>
+</nav>
+
+<div class="wrapper">
+
+<!-- ═══ TAB 1: FINANCES ══════════════════════════════════════════════ -->
+<div class="tab-pane active" id="tab0">
+  <div class="section-grid">
+
+    <div class="card">
+      <div class="section-header">
+        <div class="section-icon">💰</div>
+        <div><h3>Income & Savings</h3><p>Your financial snapshot</p></div>
+      </div>
+
+      <div class="field">
+        <label>Annual Gross Income (USD)</label>
+        <div class="prefix-wrap"><span class="prefix">$</span>
+          <input type="number" id="income" value="220000">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Total Cash / Liquid Assets <span class="tip">All liquid</span></label>
+        <div class="prefix-wrap"><span class="prefix">$</span>
+          <input type="number" id="cash" value="300000">
+        </div>
+        <div class="hint">Checking + savings + liquid investments. Not 401k.</div>
+      </div>
+
+      <div class="field">
+        <label>Emergency Fund (separate) <span class="tip">Keep untouched</span></label>
+        <div class="prefix-wrap"><span class="prefix">$</span>
+          <input type="number" id="emergency" value="40000">
+        </div>
+        <div class="hint">6 months of expenses. This is NOT available for down payment.</div>
+      </div>
+
+      <div class="field">
+        <label>Monthly Debt Payments (existing)</label>
+        <div class="prefix-wrap"><span class="prefix">$</span>
+          <input type="number" id="existing_debt" value="800" placeholder="Student loans, car, etc.">
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card">
+      <div class="section-header">
+        <div class="section-icon">📋</div>
+        <div><h3>Current Living</h3><p>Where you are now</p></div>
+      </div>
+
+      <div class="field">
+        <label>Current Monthly Rent</label>
+        <div class="prefix-wrap"><span class="prefix">$</span>
+          <input type="number" id="rent_current" value="3200">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Annual Rent Increase Rate</label>
+        <div class="suffix-wrap suffix-field slider-field">
+          <div class="slider-val" id="rent_inc_val">4%</div>
+          <input type="range" id="rent_increase" min="0" max="10" step="0.5" value="4" oninput="updateSlider(this,'rent_inc_val','%')">
+        </div>
+        <div class="hint">National avg ~4%. HCOL cities often 5-8%.</div>
+      </div>
+
+      <div class="field">
+        <label>Annual Investment Return Rate <span class="tip">If you don't buy</span></label>
+        <div class="suffix-wrap suffix-field slider-field">
+          <div class="slider-val" id="inv_ret_val">7%</div>
+          <input type="range" id="inv_return" min="3" max="14" step="0.5" value="7" oninput="updateSlider(this,'inv_ret_val','%')">
+        </div>
+        <div class="hint">S&P 500 historical ~7% real. Use 5-6% if conservative.</div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ TAB 2: PROPERTY ══════════════════════════════════════════════ -->
+<div class="tab-pane" id="tab1">
+  <div class="section-grid">
+
+    <div class="card">
+      <div class="section-header">
+        <div class="section-icon">🏠</div>
+        <div><h3>Purchase Details</h3><p>The home you're considering</p></div>
+      </div>
+
+      <div class="field">
+        <label>Home Purchase Price</label>
+        <div class="prefix-wrap"><span class="prefix">$</span>
+          <input type="number" id="price" value="750000">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Down Payment</label>
+        <div class="prefix-wrap"><span class="prefix">$</span>
+          <input type="number" id="down" value="150000" oninput="updateDownPct()">
+        </div>
+        <div id="down_pct_hint" class="hint"></div>
+      </div>
+
+      <div class="field">
+        <label>Mortgage Interest Rate</label>
+        <div class="suffix-wrap suffix-field slider-field">
+          <div class="slider-val" id="rate_val">6.8%</div>
+          <input type="range" id="rate" min="3" max="12" step="0.1" value="6.8" oninput="updateSlider(this,'rate_val','%')">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Loan Term</label>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="loan_term" value="30" checked><span>30 years</span></label>
+          <label class="radio-option"><input type="radio" name="loan_term" value="20"><span>20 years</span></label>
+          <label class="radio-option"><input type="radio" name="loan_term" value="15"><span>15 years</span></label>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card">
+      <div class="section-header">
+        <div class="section-icon">🧾</div>
+        <div><h3>Ongoing Costs</h3><p>The costs beyond the mortgage</p></div>
+      </div>
+
+      <div class="field">
+        <label>Annual Property Tax Rate</label>
+        <div class="suffix-wrap suffix-field slider-field">
+          <div class="slider-val" id="prop_tax_val">1.2%</div>
+          <input type="range" id="prop_tax" min="0.3" max="3.5" step="0.05" value="1.2" oninput="updateSlider(this,'prop_tax_val','%')">
+        </div>
+        <div class="hint">Varies by state. CA ~1.1%, TX ~1.8%, NJ ~2.2%</div>
+      </div>
+
+      <div class="field">
+        <label>Monthly HOA Fees</label>
+        <div class="prefix-wrap"><span class="prefix">$</span>
+          <input type="number" id="hoa" value="0" placeholder="0 if none">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Annual Maintenance Rate</label>
+        <div class="suffix-wrap suffix-field slider-field">
+          <div class="slider-val" id="maint_val">1.5%</div>
+          <input type="range" id="maintenance" min="0.5" max="3" step="0.1" value="1.5" oninput="updateSlider(this,'maint_val','%')">
+        </div>
+        <div class="hint">Rule of thumb: 1-2% of home value/year. Older homes: higher.</div>
+      </div>
+
+      <div class="field">
+        <label>Annual Home Appreciation Rate</label>
+        <div class="suffix-wrap suffix-field slider-field">
+          <div class="slider-val" id="appr_val">3.5%</div>
+          <input type="range" id="appreciation" min="0" max="8" step="0.25" value="3.5" oninput="updateSlider(this,'appr_val','%')">
+        </div>
+        <div class="hint">US historical avg ~4%. HCOL metros 5-7%. Rural 1-2%.</div>
+      </div>
+
+    </div>
+
+    <div class="card card-full">
+      <div class="section-header">
+        <div class="section-icon">🔐</div>
+        <div><h3>Tax & Transaction Costs</h3><p>Often underestimated</p></div>
+      </div>
+      <div class="section-grid" style="margin-top:0">
+        <div class="field">
+          <label>Closing Costs on Purchase</label>
+          <div class="suffix-wrap suffix-field slider-field">
+            <div class="slider-val" id="closing_val">2.5%</div>
+            <input type="range" id="closing_costs" min="1" max="5" step="0.1" value="2.5" oninput="updateSlider(this,'closing_val','%')">
+          </div>
+          <div class="hint">Typically 2-4% of price. Includes origination, title, escrow.</div>
+        </div>
+        <div class="field">
+          <label>Selling Costs (when you exit)</label>
+          <div class="suffix-wrap suffix-field slider-field">
+            <div class="slider-val" id="sell_cost_val">6%</div>
+            <input type="range" id="sell_costs" min="3" max="9" step="0.5" value="6" oninput="updateSlider(this,'sell_cost_val','%')">
+          </div>
+          <div class="hint">Realtor fees ~5-6%. Can be lower with flat-fee agents.</div>
+        </div>
+        <div class="field">
+          <label>Federal Tax Bracket</label>
+          <div class="radio-group">
+            <label class="radio-option"><input type="radio" name="tax_bracket" value="0.22"><span>22%</span></label>
+            <label class="radio-option"><input type="radio" name="tax_bracket" value="0.24" checked><span>24%</span></label>
+            <label class="radio-option"><input type="radio" name="tax_bracket" value="0.32"><span>32%</span></label>
+            <label class="radio-option"><input type="radio" name="tax_bracket" value="0.37"><span>37%</span></label>
+          </div>
+          <div class="hint">Used to calculate mortgage interest deduction benefit (if you itemize).</div>
+        </div>
+        <div class="field">
+          <label>Itemize Deductions?</label>
+          <div class="radio-group">
+            <label class="radio-option"><input type="radio" name="itemize" value="yes"><span>Yes</span></label>
+            <label class="radio-option"><input type="radio" name="itemize" value="no" checked><span>No (Standard)</span></label>
+          </div>
+          <div class="hint">Most taxpayers take standard deduction now post-TCJA.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ TAB 3: MARKET ═════════════════════════════════════════════════ -->
+<div class="tab-pane" id="tab2">
+  <div class="section-grid">
+
+    <div class="card">
+      <div class="section-header">
+        <div class="section-icon">📍</div>
+        <div><h3>Rental Market</h3><p>Comparable rent in the area</p></div>
+      </div>
+
+      <div class="field">
+        <label>Market Rent for This Home</label>
+        <div class="prefix-wrap"><span class="prefix">$</span>
+          <input type="number" id="market_rent" value="3800">
+        </div>
+        <div class="hint">What would you pay to rent THIS home. Check Zillow/Redfin.</div>
+      </div>
+
+      <div class="field">
+        <label>Price-to-Rent Ratio</label>
+        <div id="ptr_display" style="font-family:'DM Mono',monospace;font-size:20px;color:var(--saffron);padding:8px 0;">— calculating —</div>
+        <div class="hint">Below 15 = buy favored. 15-20 = neutral. Above 20 = rent favored. Above 25 = significantly overpriced to rent.</div>
+      </div>
+
+      <div class="field">
+        <label>Rental Yield If You Rent It Out</label>
+        <div class="prefix-wrap"><span class="prefix">$</span>
+          <input type="number" id="rental_income" value="3500">
+        </div>
+        <div class="hint">Monthly rent you could charge if you leave the US. Used in India return scenario.</div>
+      </div>
+
+      <div class="field">
+        <label>Annual Vacancy + Mgmt Cost</label>
+        <div class="suffix-wrap suffix-field slider-field">
+          <div class="slider-val" id="vacancy_val">20%</div>
+          <input type="range" id="vacancy" min="5" max="40" step="1" value="20" oninput="updateSlider(this,'vacancy_val','%')">
+        </div>
+        <div class="hint">Vacancy (8-10%) + property mgmt (8-12%). Real cost of being an NRI landlord.</div>
+      </div>
+
+    </div>
+
+    <div class="card">
+      <div class="section-header">
+        <div class="section-icon">📊</div>
+        <div><h3>Local Market Assumptions</h3><p>What you expect over time</p></div>
+      </div>
+
+      <div class="field">
+        <label>Market Type <span class="tip">Affects P/T thresholds</span></label>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="market_type" value="hcol"><span>HCOL (SF/NYC/SEA)</span></label>
+          <label class="radio-option"><input type="radio" name="market_type" value="mcol" checked><span>MCOL (ATL/DEN/PHX)</span></label>
+          <label class="radio-option"><input type="radio" name="market_type" value="lcol"><span>LCOL</span></label>
+        </div>
+        <div class="hint">HCOL: high P/T ratios (20–30x) are normal and less penalized. LCOL: P/T above 15x is a red flag.</div>
+      </div>
+
+      <div class="field">
+        <label>Home Insurance (Annual)</label>
+        <div class="prefix-wrap"><span class="prefix">$</span>
+          <input type="number" id="insurance" value="2400">
+        </div>
+        <div class="hint">~0.3-0.5% of home value. Higher in FL, TX (hurricane/tornado risk).</div>
+      </div>
+
+      <div class="field">
+        <label>Capital Gains Exclusion Eligible?</label>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="cap_gains" value="yes" checked><span>Yes (2+ yrs primary)</span></label>
+          <label class="radio-option"><input type="radio" name="cap_gains" value="no"><span>No (NRI at sale)</span></label>
+        </div>
+        <div class="hint">$250k/$500k exclusion requires 2-of-5 year primary residence rule. If you sell as NRI, FIRPTA 15% withholding applies.</div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ TAB 4: LIFE PLANS ═══════════════════════════════════════════ -->
+<div class="tab-pane" id="tab3">
+  <div class="section-grid">
+
+    <div class="card">
+      <div class="section-header">
+        <div class="section-icon">🛂</div>
+        <div><h3>Visa & Immigration</h3><p>Your biggest unknown</p></div>
+      </div>
+
+      <div class="notice">
+        <strong>NRI reality:</strong> This is the factor most tools ignore. A forced exit is the single biggest financial risk of buying as a non-citizen.
+      </div>
+
+      <div class="field">
+        <label>Current Immigration Status</label>
+        <select id="visa_status">
+          <option value="citizen">US Citizen</option>
+          <option value="gc">Green Card (GC)</option>
+          <option value="gc_pending">GC Pending (Priority Date filed)</option>
+          <option value="h1b" selected>H-1B (Employer sponsored)</option>
+          <option value="l1">L-1 (Intracompany transfer)</option>
+          <option value="o1">O-1 (Extraordinary ability)</option>
+          <option value="tn">TN (Canada/Mexico)</option>
+          <option value="e2">E-2 (Treaty investor)</option>
+          <option value="f1_opt">F-1/OPT</option>
+        </select>
+      </div>
+
+      <div class="field" id="gc_years_field" style="display:none">
+        <label>Years Until GC (estimated)</label>
+        <div class="suffix-wrap suffix-field slider-field">
+          <div class="slider-val" id="gc_wait_val">5 yrs</div>
+          <input type="range" id="gc_wait" min="1" max="15" step="1" value="5" oninput="updateSlider(this,'gc_wait_val',' yrs')">
+        </div>
+        <div class="hint">EB-2 India currently 10-15+ years. EB-3 India 10+ years. Use realistic estimate.</div>
+      </div>
+
+      <div class="field">
+        <label>Job Security Confidence</label>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="job_security" value="high"><span>High</span></label>
+          <label class="radio-option"><input type="radio" name="job_security" value="med" checked><span>Medium</span></label>
+          <label class="radio-option"><input type="radio" name="job_security" value="low"><span>Low</span></label>
+        </div>
+        <div class="hint">For H-1B/L-1: job loss = visa loss = forced sale. Weight this carefully.</div>
+      </div>
+
+      <div class="field">
+        <label>Visa Grace Period After Job Loss</label>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="grace_period" value="60" checked><span>60 days (H-1B)</span></label>
+          <label class="radio-option"><input type="radio" name="grace_period" value="120"><span>120+ days (GC)</span></label>
+          <label class="radio-option"><input type="radio" name="grace_period" value="0"><span>None / Unknown</span></label>
+        </div>
+        <div class="hint">Used in forced-exit risk: 60 days to sell a home is nearly impossible in most markets without a deep discount.</div>
+      </div>
+
+    </div>
+
+    <div class="card">
+      <div class="section-header">
+        <div class="section-icon">✈️</div>
+        <div><h3>Life Timeline</h3><p>How long and what next</p></div>
+      </div>
+
+      <div class="field">
+        <label>Years You Plan to Stay in US</label>
+        <div class="suffix-wrap suffix-field slider-field">
+          <div class="slider-val" id="stay_yrs_val">7 yrs</div>
+          <input type="range" id="stay_years" min="1" max="30" step="1" value="7" oninput="updateSlider(this,'stay_yrs_val',' yrs')">
+        </div>
+        <div class="hint">Be realistic. This is the single biggest driver of whether buying makes sense.</div>
+      </div>
+
+      <div class="field">
+        <label>India Return Plan</label>
+        <select id="india_plan">
+          <option value="no">Not planning to return</option>
+          <option value="maybe">Maybe, in 7-10 years</option>
+          <option value="yes_soon" selected>Yes, within 5-7 years</option>
+          <option value="yes_firm">Yes, firm plan in ~3 years</option>
+          <option value="retire">Retire in India</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>If You Return to India, US Home Plan</label>
+        <select id="exit_plan">
+          <option value="sell">Sell it</option>
+          <option value="rent" selected>Rent it out</option>
+          <option value="unsure">Unsure</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>India Home Plans</label>
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="india_home" value="none" checked><span>No plan yet</span></label>
+          <label class="radio-option"><input type="radio" name="india_home" value="buy_soon"><span>Buying in India too</span></label>
+          <label class="radio-option"><input type="radio" name="india_home" value="parents"><span>Parents' home</span></label>
+        </div>
+        <div class="hint">Buying in both countries significantly changes financial picture.</div>
+      </div>
+
+    </div>
+
+    <div class="card card-full">
+      <div class="section-header">
+        <div class="section-icon">⚡</div>
+        <div><h3>Stress Test Parameters</h3><p>What if things go wrong?</p></div>
+      </div>
+      <div class="section-grid" style="margin-top:0">
+        <div class="field">
+          <label>Income Drop Scenario</label>
+          <div class="suffix-wrap suffix-field slider-field">
+            <div class="slider-val" id="income_drop_val">30%</div>
+            <input type="range" id="income_drop" min="0" max="80" step="5" value="30" oninput="updateSlider(this,'income_drop_val','%')">
+          </div>
+          <div class="hint">What if you lose your job or change to a lower-paying one?</div>
+        </div>
+        <div class="field">
+          <label>Rate Shock (if ARM / refi)</label>
+          <div class="suffix-wrap suffix-field slider-field">
+            <div class="slider-val" id="rate_shock_val">+2%</div>
+            <input type="range" id="rate_shock" min="0" max="4" step="0.25" value="2" oninput="updateSlider(this,'rate_shock_val','+%', true)">
+          </div>
+          <div class="hint">If you ever refinance into a higher rate or have ARM.</div>
+        </div>
+        <div class="field">
+          <label>Forced Sale Timing (worst case)</label>
+          <div class="suffix-wrap suffix-field slider-field">
+            <div class="slider-val" id="forced_sale_val">2 yrs</div>
+            <input type="range" id="forced_sale" min="1" max="5" step="1" value="2" oninput="updateSlider(this,'forced_sale_val',' yrs')">
+          </div>
+          <div class="hint">If you had to sell this quickly. Models the worst-case loss.</div>
+        </div>
+        <div class="field">
+          <label>Home Price Correction Risk</label>
+          <div class="radio-group">
+            <label class="radio-option"><input type="radio" name="correction" value="none"><span>None</span></label>
+            <label class="radio-option"><input type="radio" name="correction" value="mild" checked><span>Mild (-10%)</span></label>
+            <label class="radio-option"><input type="radio" name="correction" value="severe"><span>Severe (-25%)</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ANALYZE BUTTON -->
+<div class="analyze-wrap">
+  <button class="btn-analyze" onclick="runAnalysis()">
+    ⚡ Run Full Analysis
+  </button>
+</div>
+
+<!-- ═══ RESULTS ════════════════════════════════════════════════════ -->
+<div id="results-section">
+
+  <!-- Verdict -->
+  <div id="verdict-card" class="verdict-card buy">
+    <div class="verdict-label">NRI Home Decision</div>
+    <div class="verdict-main" id="verdict-text">BUY</div>
+    <div class="verdict-sub" id="verdict-sub">Your numbers support buying with manageable risk.</div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px">
+      <div class="score-pill">
+        <span class="score-num" id="score-num">78</span>
+        <span class="score-label">/ 100 Decision Score</span>
+      </div>
+      <div class="confidence-badge" id="confidence-badge">
+        <div class="conf-dot conf-med"></div>
+        <span id="confidence-text">Medium Confidence</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Key Metrics -->
+  <div class="metrics-row" id="metrics-row"></div>
+
+  <!-- Input Summary (for PDF / sharing) -->
+  <div class="card card-full" id="input-summary-card" style="display:none">
+    <div class="section-header">
+      <div class="section-icon">📋</div>
+      <div><h3>Your Inputs</h3><p>What this analysis was based on — useful when saving or sharing</p></div>
+    </div>
+    <div id="input-summary" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px 20px">
+    </div>
+  </div>
+
+  <!-- 2-column grid for main analysis -->
+  <div class="section-grid">
+
+    <!-- Buy vs Rent Monthly -->
+    <div class="card">
+      <div class="section-header">
+        <div class="section-icon">⚖️</div>
+        <div><h3>Monthly Cost Comparison</h3><p>True monthly cost of each path</p></div>
+      </div>
+      <table class="compare-table" id="monthly-table"></table>
+    </div>
+
+    <!-- Risk Assessment -->
+    <div class="card">
+      <div class="section-header">
+        <div class="section-icon">🚦</div>
+        <div><h3>Risk Assessment</h3><p>What's working for and against you</p></div>
+      </div>
+      <div class="risk-list" id="risk-list"></div>
+    </div>
+
+    <!-- Chart: Cumulative cost over time -->
+    <div class="card card-full">
+      <div class="section-header">
+        <div class="section-icon">📈</div>
+        <div><h3>Cumulative Cost Over Time</h3><p>Buying vs Renting vs Investing down payment</p></div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="costChart" height="240"></canvas>
+      </div>
+      <div class="chart-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#151739"></div>Buy (net cost after equity)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#D7AE43"></div>Rent (cumulative)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#2E7D52"></div>Invest down payment</div>
+      </div>
+    </div>
+
+    <!-- Break-even -->
+    <div class="card card-full">
+      <div class="section-header">
+        <div class="section-icon">🎯</div>
+        <div><h3>Break-even Analysis</h3><p>When buying becomes cheaper than renting</p></div>
+      </div>
+      <div class="breakeven-band" id="breakeven-band">
+        <div>
+          <div class="be-label">Break-even Point</div>
+          <div class="be-val" id="be-val">Year 6</div>
+        </div>
+        <div class="be-note" id="be-note">You plan to stay 7 years. Buying starts paying off around year 6. It's close — any forced exit before then means you likely lose money.</div>
+      </div>
+    </div>
+
+    <!-- Projection Table -->
+    <div class="card card-full">
+      <div class="section-header">
+        <div class="section-icon">📅</div>
+        <div><h3>Year-by-Year Projection</h3><p>True cost of buying vs renting at each exit point</p></div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="year-table" id="year-table"></table>
+      </div>
+    </div>
+
+    <!-- Scenarios -->
+    <div class="card card-full">
+      <div class="section-header">
+        <div class="section-icon">🔭</div>
+        <div><h3>Scenario Analysis</h3><p>Three outcomes based on how your US story ends</p></div>
+      </div>
+      <div class="scenario-grid" id="scenario-grid"></div>
+    </div>
+
+    <!-- Stress Test Results -->
+    <div class="card card-full">
+      <div class="section-header">
+        <div class="section-icon">⚡</div>
+        <div><h3>Stress Test Results</h3><p>What happens if income drops or rates rise</p></div>
+      </div>
+      <div class="sensitivity-grid" id="stress-grid"></div>
+    </div>
+
+    <!-- NRI-specific flags -->
+    <div class="card card-full">
+      <div class="section-header">
+        <div class="section-icon">🇮🇳</div>
+        <div><h3>NRI-Specific Considerations</h3><p>What most calculators miss</p></div>
+      </div>
+      <div class="risk-list" id="nri-flags"></div>
+    </div>
+
+    <!-- Why this decision -->
+    <div class="card card-full">
+      <div class="section-header">
+        <div class="section-icon">🧠</div>
+        <div><h3>Why This Decision</h3><p>Plain-language explanation of your result</p></div>
+      </div>
+      <div class="explanation-list" id="explanation-list"></div>
+    </div>
+
+    <!-- Sensitivity Analysis -->
+    <div class="card card-full">
+      <div class="section-header">
+        <div class="section-icon">📐</div>
+        <div><h3>How Fragile Is This Decision?</h3><p>What changes if appreciation is lower or higher than assumed</p></div>
+      </div>
+      <div class="notice" style="margin-bottom:16px">Assumes all other inputs stay constant. Real outcomes depend on many variables — run this tool twice with optimistic and pessimistic assumptions.</div>
+      <div class="sensitivity-grid" id="sensitivity-grid"></div>
+    </div>
+
+    <!-- Next Steps -->
+    <div class="card card-full">
+      <div class="section-header">
+        <div class="section-icon">🗺️</div>
+        <div><h3>What To Do Next</h3><p>Concrete actions based on your result</p></div>
+      </div>
+      <div class="next-steps" id="next-steps"></div>
+    </div>
+
+  </div>
+
+  <div style="text-align:center;margin-top:24px">
+    <button class="btn-secondary" onclick="window.print()">🖨️ Save as PDF</button>
+  </div>
+
+</div><!-- /results -->
+
+<!-- CASE STUDIES -->
+<div class="cases-section">
+  <div class="cases-title">Real NRI Scenarios</div>
+  <div class="cases-sub">Three archetypes we see most in r/RupeeStories. Find the one closest to your situation.</div>
+
+  <div class="case-grid">
+
+    <!-- Case 1: BUY -->
+    <div class="case-card">
+      <div class="case-card-top">
+        <div class="case-verdict-pill pill-buy">✓ Buy — Score 78</div>
+        <div class="case-name">Ravi &amp; Priya, Atlanta</div>
+        <div class="case-profile">GC holders · $210k income · 10+ year US plan</div>
+      </div>
+      <div class="case-card-body">
+        <div class="case-facts">
+          <div class="case-fact"><span class="case-fact-label">Home price</span><span class="case-fact-val">$520,000</span></div>
+          <div class="case-fact"><span class="case-fact-label">Down payment</span><span class="case-fact-val">$104k (20%)</span></div>
+          <div class="case-fact"><span class="case-fact-label">Mortgage rate</span><span class="case-fact-val">6.9%</span></div>
+          <div class="case-fact"><span class="case-fact-label">Market rent equiv.</span><span class="case-fact-val">$2,800/mo</span></div>
+          <div class="case-fact"><span class="case-fact-label">P/T ratio</span><span class="case-fact-val">15.5x — neutral/buy</span></div>
+          <div class="case-fact"><span class="case-fact-label">Break-even</span><span class="case-fact-val">Year 5</span></div>
+        </div>
+        <div class="case-score-bar-wrap">
+          <div class="case-score-label"><span>Decision Score</span><span>78 / 100</span></div>
+          <div class="case-score-bar"><div class="case-score-fill fill-buy" style="width:78%"></div></div>
+        </div>
+        <div class="case-why">
+          <strong>Why it works</strong>
+          GC removes forced-exit risk entirely. Atlanta's P/T ratio still makes buying viable. 20% down eliminates PMI. Mortgage is 27% of gross income — comfortably under 28%. 10-year US timeline clears break-even by year 5 with 5 years of upside. Even a mild home price correction at year 3 wouldn't create a loss by year 10.
+        </div>
+      </div>
+    </div>
+
+    <!-- Case 2: CAUTION -->
+    <div class="case-card">
+      <div class="case-card-top">
+        <div class="case-verdict-pill pill-caution">⚠ Caution — Score 54</div>
+        <div class="case-name">Karan, Bay Area</div>
+        <div class="case-profile">H-1B · $280k income · Maybe 5-7 more years</div>
+      </div>
+      <div class="case-card-body">
+        <div class="case-facts">
+          <div class="case-fact"><span class="case-fact-label">Home price</span><span class="case-fact-val">$1,350,000</span></div>
+          <div class="case-fact"><span class="case-fact-label">Down payment</span><span class="case-fact-val">$270k (20%)</span></div>
+          <div class="case-fact"><span class="case-fact-label">Mortgage rate</span><span class="case-fact-val">7.1%</span></div>
+          <div class="case-fact"><span class="case-fact-label">Market rent equiv.</span><span class="case-fact-val">$4,800/mo</span></div>
+          <div class="case-fact"><span class="case-fact-label">P/T ratio</span><span class="case-fact-val">23.4x — favors renting</span></div>
+          <div class="case-fact"><span class="case-fact-label">Break-even</span><span class="case-fact-val">Year 9</span></div>
+        </div>
+        <div class="case-score-bar-wrap">
+          <div class="case-score-label"><span>Decision Score</span><span>54 / 100</span></div>
+          <div class="case-score-bar"><div class="case-score-fill fill-caution" style="width:54%"></div></div>
+        </div>
+        <div class="case-why">
+          <strong>Why it's complicated</strong>
+          High P/T ratio (23x) means renting is fundamentally cheaper here. H-1B creates a 60-day forced-exit window that can't cover a home sale. Break-even is year 9 but he plans to stay only 5-7 years — he'd likely exit at a loss. The math could work if he plans to rent it out and India rental income covers the gap. Needs a firm exit plan before signing.
+        </div>
+      </div>
+    </div>
+
+    <!-- Case 3: WAIT -->
+    <div class="case-card">
+      <div class="case-card-top">
+        <div class="case-verdict-pill pill-wait">✗ Wait — Score 31</div>
+        <div class="case-name">Deepa, New Jersey</div>
+        <div class="case-profile">H-1B · $155k income · India return in ~3 yrs</div>
+      </div>
+      <div class="case-card-body">
+        <div class="case-facts">
+          <div class="case-fact"><span class="case-fact-label">Home price</span><span class="case-fact-val">$680,000</span></div>
+          <div class="case-fact"><span class="case-fact-label">Down payment</span><span class="case-fact-val">$68k (10%)</span></div>
+          <div class="case-fact"><span class="case-fact-label">Mortgage rate</span><span class="case-fact-val">7.0%</span></div>
+          <div class="case-fact"><span class="case-fact-label">Market rent equiv.</span><span class="case-fact-val">$3,200/mo</span></div>
+          <div class="case-fact"><span class="case-fact-label">P/T ratio</span><span class="case-fact-val">17.7x — neutral</span></div>
+          <div class="case-fact"><span class="case-fact-label">Break-even</span><span class="case-fact-val">Year 7</span></div>
+        </div>
+        <div class="case-score-bar-wrap">
+          <div class="case-score-label"><span>Decision Score</span><span>31 / 100</span></div>
+          <div class="case-score-bar"><div class="case-score-fill fill-wait" style="width:31%"></div></div>
+        </div>
+        <div class="case-why">
+          <strong>Why it doesn't work</strong>
+          Planning to return to India in 3 years but break-even is year 7 — she exits 4 years before buying pays off. Only 10% down triggers PMI (~$425/mo). After PMI + property tax + maintenance, true monthly cost is $6,100 vs $3,200 rent. NJ property tax is 2.2%. Plus: $68k down + $20k closing costs leaves her with under $30k liquid — dangerously thin. The honest answer is: save more, return to India, buy there.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- GUIDE SECTION -->
+<div class="guide-section">
+  <div class="guide-inner">
+
+    <div class="guide-block">
+      <div class="guide-block-title">
+        <div class="g-icon">✓</div>
+        What this tool does
+      </div>
+      <ul class="guide-list do">
+        <li><span class="gl-dot"></span>Calculates your true monthly cost of buying — not just EMI, but tax, maintenance, insurance, HOA, and PMI</li>
+        <li><span class="gl-dot"></span>Compares buying vs renting vs investing your down payment over 20 years</li>
+        <li><span class="gl-dot"></span>Models your break-even point — the year buying becomes cheaper than renting</li>
+        <li><span class="gl-dot"></span>Stress-tests a forced exit (job loss, visa revocation) and shows the financial damage</li>
+        <li><span class="gl-dot"></span>Runs three NRI scenarios: stay as planned, forced early exit, and rent-it-out if you return to India</li>
+        <li><span class="gl-dot"></span>Flags FIRPTA withholding, RNOR window planning, and capital gains exclusion eligibility</li>
+      </ul>
+    </div>
+
+    <div class="guide-block">
+      <div class="guide-block-title">
+        <div class="g-icon">✗</div>
+        What it doesn't do
+      </div>
+      <ul class="guide-list dont">
+        <li><span class="gl-dot"></span>Does not predict the future — appreciation rates, rent growth, and interest rates are your assumptions</li>
+        <li><span class="gl-dot"></span>Does not account for state-specific tax laws, SALT deduction limits, or local rent control</li>
+        <li><span class="gl-dot"></span>Does not replace a CPA or CFP — cross-border tax (India+US) needs a licensed advisor</li>
+        <li><span class="gl-dot"></span>Does not factor in emotional value, school districts, or quality-of-life considerations</li>
+        <li><span class="gl-dot"></span>Does not model ARM resets, jumbo loan pricing, or co-borrower scenarios</li>
+      </ul>
+    </div>
+
+    <div class="guide-block">
+      <div class="guide-block-title">
+        <div class="g-icon">→</div>
+        How to read the report
+      </div>
+      <ul class="guide-list how">
+        <li><span class="gl-dot"></span><strong>Decision Score</strong> is 0–100. Above 70 = Buy. 50–70 = Caution. Below 50 = Wait. It's a starting point, not a verdict.</li>
+        <li><span class="gl-dot"></span><strong>Break-even chart</strong> shows when cumulative buying cost dips below cumulative rent. The gap matters more than the verdict.</li>
+        <li><span class="gl-dot"></span><strong>Year-by-year table</strong> — find the row matching your planned stay. That's your real comparison.</li>
+        <li><span class="gl-dot"></span><strong>Red flags</strong> are blockers. <strong>Amber flags</strong> are risks to manage. <strong>Green flags</strong> are strengths to lean on.</li>
+        <li><span class="gl-dot"></span>Run it twice — once optimistic (high appreciation, low rate), once pessimistic. The truth lives between them.</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<div class="footnote">
+  Built with 💛 for r/RupeeStories &nbsp;·&nbsp;
+  <strong>Not financial advice.</strong> Consult a CPA/CFP for your specific situation. &nbsp;·&nbsp;
+  rupeestories.substack.com
+</div>
+
+</div><!-- /wrapper -->
+
+<script>
+// ─── UTILITIES ──────────────────────────────────────────────────────────────
+function $(id){ return document.getElementById(id); }
+function fmtDollar(n){
+  if(activeCurrency==='inr') return '₹'+Math.round(n*FX_RATE).toLocaleString('en-IN');
+  return '$'+Math.round(n).toLocaleString();
+}
+function fmtK(n){
+  const sym = activeCurrency==='inr' ? '₹' : '$';
+  const mult = activeCurrency==='inr' ? FX_RATE/1000 : 1/1000;
+  const v = Math.round(Math.abs(n)*mult);
+  return n>=0 ? '+'+sym+v+'k' : '-'+sym+v+'k';
+}
+function val(id){ return parseFloat($(id).value)||0; }
+function radioVal(name){ const el=document.querySelector(`input[name="${name}"]:checked`); return el?el.value:''; }
+const FX_RATE = 83;
+let activeCurrency = 'usd';
+
+// ─── CURRENCY ───────────────────────────────────────────────────────────────
+function setCurrency(cur){
+  activeCurrency = cur;
+  $('cur-usd').classList.toggle('active', cur==='usd');
+  $('cur-inr').classList.toggle('active', cur==='inr');
+}
+
+// ─── LOCAL STORAGE ──────────────────────────────────────────────────────────
+function saveState(){
+  const data = {};
+  document.querySelectorAll('input[id], select[id]').forEach(el=>{
+    if(el.type==='range'||el.type==='number'||el.tagName==='SELECT') data[el.id]=el.value;
+  });
+  document.querySelectorAll('input[type=radio]:checked').forEach(el=>{ data[el.name]=el.value; });
+  try{ localStorage.setItem('nriToolState', JSON.stringify(data)); }catch(e){}
+}
+
+function loadState(){
+  try{
+    const data = JSON.parse(localStorage.getItem('nriToolState')||'{}');
+    if(!Object.keys(data).length) return;
+    Object.keys(data).forEach(key=>{
+      const el=$(key);
+      if(el && el.type!=='radio') el.value=data[key];
+      const radio=document.querySelector(`input[name="${key}"][value="${data[key]}"]`);
+      if(radio) radio.checked=true;
+    });
+    refreshAllSliders();
+    updatePTR(); updateDownPct();
+  }catch(e){}
+}
+
+function refreshAllSliders(){
+  document.querySelectorAll('input[type=range]').forEach(el=>{
+    const pct=(parseFloat(el.value)-parseFloat(el.min))/(parseFloat(el.max)-parseFloat(el.min))*100;
+    el.style.setProperty('--pct',pct+'%');
+  });
+  const map = {
+    stay_yrs_val:  [val('stay_years'), ' yrs'],
+    gc_wait_val:   [val('gc_wait'), ' yrs'],
+    rent_inc_val:  [val('rent_increase'), '%'],
+    inv_ret_val:   [val('inv_return'), '%'],
+    rate_val:      [val('rate'), '%'],
+    prop_tax_val:  [val('prop_tax'), '%'],
+    maint_val:     [val('maintenance'), '%'],
+    appr_val:      [val('appreciation'), '%'],
+    closing_val:   [val('closing_costs'), '%'],
+    sell_cost_val: [val('sell_costs'), '%'],
+    vacancy_val:   [val('vacancy'), '%'],
+    forced_sale_val:[val('forced_sale'), ' yrs'],
+    income_drop_val:[val('income_drop'), '%'],
+  };
+  Object.keys(map).forEach(id=>{ if($(id)) $(id).textContent=map[id][0]+map[id][1]; });
+  if($('rate_shock_val')) $('rate_shock_val').textContent='+'+val('rate_shock')+'%';
+  if($('gc_years_field')) $('gc_years_field').style.display=$('visa_status').value==='gc_pending'?'':'none';
+}
+
+document.addEventListener('change', saveState);
+document.addEventListener('input', saveState);
+
+// ─── PRESETS ────────────────────────────────────────────────────────────────
+function loadPreset(type){
+  const presets = {
+    faang_h1b: {
+      income:320000, cash:350000, emergency:50000, existing_debt:600,
+      rent_current:3800, rent_increase:5, inv_return:7,
+      price:1100000, down:220000, rate:7.0, prop_tax:1.2, hoa:0, maintenance:1.5,
+      appreciation:4, closing_costs:2.5, sell_costs:6, insurance:3200,
+      market_rent:4200, rental_income:4000, vacancy:20,
+      stay_years:6, forced_sale:2, income_drop:40, rate_shock:2,
+      visa_status:'h1b', india_plan:'yes_soon', exit_plan:'rent', job_security:'med',
+      loan_term:'30', tax_bracket:'0.37', itemize:'no', cap_gains:'yes',
+      correction:'mild', india_home:'none', market_type:'hcol', grace_period:'60'
+    },
+    gc_stable: {
+      income:210000, cash:280000, emergency:40000, existing_debt:500,
+      rent_current:3000, rent_increase:4, inv_return:7,
+      price:620000, down:124000, rate:6.8, prop_tax:1.1, hoa:200, maintenance:1.5,
+      appreciation:4, closing_costs:2.5, sell_costs:6, insurance:2200,
+      market_rent:2900, rental_income:2800, vacancy:15,
+      stay_years:12, forced_sale:3, income_drop:25, rate_shock:1,
+      visa_status:'gc', india_plan:'maybe', exit_plan:'sell', job_security:'high',
+      loan_term:'30', tax_bracket:'0.24', itemize:'no', cap_gains:'yes',
+      correction:'none', india_home:'none', market_type:'mcol', grace_period:'120'
+    },
+    india_return: {
+      income:160000, cash:200000, emergency:35000, existing_debt:800,
+      rent_current:2800, rent_increase:4, inv_return:7,
+      price:680000, down:68000, rate:7.1, prop_tax:2.0, hoa:0, maintenance:1.8,
+      appreciation:3, closing_costs:2.5, sell_costs:6, insurance:2600,
+      market_rent:3100, rental_income:2900, vacancy:22,
+      stay_years:3, forced_sale:2, income_drop:30, rate_shock:2,
+      visa_status:'h1b', india_plan:'yes_firm', exit_plan:'sell', job_security:'med',
+      loan_term:'30', tax_bracket:'0.24', itemize:'no', cap_gains:'no',
+      correction:'mild', india_home:'buy_soon', market_type:'mcol', grace_period:'60'
+    },
+    first_time: {
+      income:145000, cash:180000, emergency:30000, existing_debt:400,
+      rent_current:2400, rent_increase:3.5, inv_return:6,
+      price:480000, down:96000, rate:6.9, prop_tax:1.1, hoa:0, maintenance:1.5,
+      appreciation:3.5, closing_costs:2.5, sell_costs:6, insurance:1800,
+      market_rent:2300, rental_income:2200, vacancy:18,
+      stay_years:8, forced_sale:2, income_drop:20, rate_shock:1.5,
+      visa_status:'h1b', india_plan:'maybe', exit_plan:'rent', job_security:'med',
+      loan_term:'30', tax_bracket:'0.22', itemize:'no', cap_gains:'yes',
+      correction:'mild', india_home:'none', market_type:'mcol', grace_period:'60'
+    }
+  };
+  const p=presets[type]; if(!p) return;
+  Object.keys(p).forEach(key=>{
+    const el=$(key);
+    if(el){ el.value=p[key]; return; }
+    const radio=document.querySelector(`input[name="${key}"][value="${p[key]}"]`);
+    if(radio) radio.checked=true;
+  });
+  refreshAllSliders(); updatePTR(); updateDownPct(); saveState();
+}
+
+// ─── SLIDER / FIELD UPDATES ─────────────────────────────────────────────────
+function updateSlider(el, displayId, unit, isRateShock){
+  const v=parseFloat(el.value);
+  const pct=(v-parseFloat(el.min))/(parseFloat(el.max)-parseFloat(el.min))*100;
+  el.style.setProperty('--pct',pct+'%');
+  $(displayId).textContent = isRateShock ? '+'+v+'%' : v+unit;
+  updatePTR();
+}
+
+function updatePTR(){
+  const price=val('price'), mrent=val('market_rent');
+  if(!price||!mrent) return;
+  const ptr=price/(mrent*12);
+  const marketType=radioVal('market_type')||'mcol';
+  // HCOL gets softer thresholds — 25+ is red, 20+ amber, <18 green
+  // LCOL gets tighter — 18+ is red, 15+ amber, <12 green
+  const [tGreen, tAmber, tRed] = marketType==='hcol'?[18,20,25]:marketType==='lcol'?[12,15,18]:[15,20,25];
+  const color = ptr<tGreen?'#2E7D52':ptr<tAmber?'#B7620A':'#C0392B';
+  const label = ptr<tGreen?'✓ Favors Buying':ptr<tAmber?'⚠ Neutral':ptr<tRed?'⚠ Favors Renting':'✗ Strongly Favors Renting';
+  $('ptr_display').innerHTML=`<span style="color:${color}">${ptr.toFixed(1)}</span> <span style="font-size:13px;color:var(--text-light)">${label}</span>`;
+}
+
+function updateDownPct(){
+  const price=val('price'), down=val('down');
+  if(price&&down){
+    const pct=(down/price*100).toFixed(1);
+    $('down_pct_hint').textContent=`${pct}% down payment${pct<20?' · PMI required (add ~0.5–1% annually)':''}`;
+  }
+}
+
+function switchTab(n){
+  document.querySelectorAll('.tab-pane').forEach((p,i)=>p.classList.toggle('active',i===n));
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===n));
+}
+
+$('visa_status').addEventListener('change', function(){
+  $('gc_years_field').style.display=this.value==='gc_pending'?'':'none';
+});
+['price','market_rent','market_type'].forEach(id=>{
+  document.querySelectorAll(`#${id}, input[name="${id}"]`).forEach(el=>el.addEventListener('input',updatePTR));
+  document.querySelectorAll(`input[name="${id}"]`).forEach(el=>el.addEventListener('change',updatePTR));
+});
+['price','down'].forEach(id=>{ const el=$(id); if(el) el.addEventListener('input',updateDownPct); });
+
+// ─── CORE CALCULATIONS ──────────────────────────────────────────────────────
+function calcEMI(loan, annualRate, termYears){
+  if(annualRate===0) return loan/(termYears*12);
+  const r=annualRate/100/12, n=termYears*12;
+  return loan*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);
+}
+
+function calcAmort(loan, annualRate, termYears, month){
+  const r=annualRate/100/12, n=termYears*12;
+  const emi=calcEMI(loan,annualRate,termYears);
+  const bal = r===0 ? loan-(loan/n)*month : loan*Math.pow(1+r,month)-emi*(Math.pow(1+r,month)-1)/r;
+  return { balance: Math.max(0,bal) };
+}
+
+// Clean single-pass model — no placeholder arrays, computed once
+function modelScenario({ price, down, irate, termYears, propTax, hoa, maint, appr,
+    closingPct, sellPct, marketRent, rentInc, invReturn, buyMonthlyCost, deductionBenefit }){
+  const loan = price - down;
+  const closingCost = price * closingPct;
+  const maxYears = 20;
+  const buyTotals=[], rentTotals=[], investTotals=[];
+
+  let cumBuyCost = closingCost + down;
+  let cumRentCost = 0;
+  // Renter invests down payment + closing cost upfront, plus any annual rent savings vs buying
+  let investBal = closingCost + down;
+
+  for(let y=1; y<=maxYears; y++){
+    // ── BUY path ──
+    const bal = calcAmort(loan, irate*100, termYears, y*12).balance;
+    const homePriceNow = price * Math.pow(1+appr, y);
+    const sellCostNow  = homePriceNow * sellPct;
+    cumBuyCost += (buyMonthlyCost - deductionBenefit) * 12;
+    // Net buy position = cumulative out-of-pocket minus equity gained, plus future sell cost
+    buyTotals.push(Math.round((cumBuyCost - (homePriceNow - bal) + sellCostNow) / 1000));
+
+    // ── RENT path ──
+    const rentThisYear = marketRent * Math.pow(1+rentInc, y-1) * 12;
+    cumRentCost += rentThisYear;
+    rentTotals.push(Math.round(cumRentCost / 1000));
+
+    // ── INVEST path ──
+    // If renting is cheaper: renter saves the gap and invests it
+    // If buying is cheaper: renter must withdraw from portfolio to cover the gap
+    const annualRentVsBuyGap = (marketRent * Math.pow(1+rentInc, y-1) * 12) - ((buyMonthlyCost - deductionBenefit) * 12);
+    // positive = renting costs more this year (renter withdraws from portfolio)
+    // negative = renting costs less this year (renter adds savings to portfolio)
+    investBal = investBal * (1 + invReturn) - annualRentVsBuyGap;
+    investTotals.push(Math.round(investBal / 1000));
+  }
+
+  // Break-even: first year where cumulative buy cost < cumulative rent cost
+  let breakEven = null;
+  for(let y=1; y<=maxYears; y++){
+    if(buyTotals[y-1] < rentTotals[y-1]){ breakEven=y; break; }
+  }
+  return { buyTotals, rentTotals, investTotals, breakEven };
+}
+
+// ─── MAIN ANALYSIS ──────────────────────────────────────────────────────────
+function runAnalysis(){
+  const income      = val('income');
+  const cash        = val('cash');
+  const emergency   = val('emergency');
+  const existDebt   = val('existing_debt');
+  const rentCurrent = val('rent_current');
+  const rentInc     = val('rent_increase')/100;
+  const invReturn   = val('inv_return')/100;
+  const price       = val('price');
+  const down        = val('down');
+  const irate       = val('rate')/100;
+  const termYears   = parseInt(radioVal('loan_term'))||30;
+  const propTax     = val('prop_tax')/100;
+  const hoa         = val('hoa');
+  const maint       = val('maintenance')/100;
+  const appr        = val('appreciation')/100;
+  const closingPct  = val('closing_costs')/100;
+  const sellPct     = val('sell_costs')/100;
+  const taxBracket  = parseFloat(radioVal('tax_bracket'))||0.24;
+  const itemize     = radioVal('itemize')==='yes';
+  const marketRent  = val('market_rent');
+  const rentalIncome= val('rental_income');
+  const vacancyPct  = val('vacancy')/100;
+  const insurance   = val('insurance');
+  const visaStatus  = $('visa_status').value;
+  const jobSec      = radioVal('job_security');
+  const stayYears   = val('stay_years');
+  const indiaPlan   = $('india_plan').value;
+  const exitPlan    = $('exit_plan').value;
+  const indiaHome   = radioVal('india_home');
+  const incomeDrop  = val('income_drop')/100;
+  const rateShock   = val('rate_shock');
+  const forcedSaleYrs = val('forced_sale');
+  const correctionVal = radioVal('correction');
+  const capGains    = radioVal('cap_gains')==='yes';
+  const gracePeriod = parseInt(radioVal('grace_period'))||60;
+  const marketType  = radioVal('market_type')||'mcol';
+
+  // DERIVED
+  const loan          = price - down;
+  const availableCash = cash - emergency;
+  const emi           = calcEMI(loan, irate*100, termYears);
+  const propTaxMo     = price * propTax / 12;
+  const maintMo       = price * maint / 12;
+  const insuranceMo   = insurance / 12;
+  const ltv           = loan / price;
+  const pmiRate       = ltv > 0.90 ? 0.015 : ltv > 0.85 ? 0.010 : ltv >= 0.80 ? 0.006 : 0;
+  const pmiFee        = pmiRate > 0 ? loan * pmiRate / 12 : 0;
+  const hasPMI        = pmiRate > 0;
+  const r             = irate / 12;
+  const annualInterestYr1 = loan * r * 12;
+  // Clean deduction: straight interest * bracket, disclaimer explains Year-1 and SALT caveat
+  const deductibleInterest = annualInterestYr1;
+  const deductionBenefit   = itemize ? (deductibleInterest * taxBracket / 12) : 0;
+  const buyMonthlyCost     = emi + propTaxMo + maintMo + insuranceMo + hoa + pmiFee - deductionBenefit;
+  const closingCost        = price * closingPct;
+  const cashAfterBuying    = availableCash - down - closingCost;
+  const monthlyIncome      = income / 12;
+  const newDTI             = (emi + existDebt) / monthlyIncome;
+  const housingRatio       = emi / monthlyIncome;
+
+  // Market-type adjusted P/T thresholds
+  const [ptGreen, ptAmber, ptRed] = marketType==='hcol'?[18,20,25]:marketType==='lcol'?[12,15,18]:[15,20,25];
+  const ptrRatio = price / (marketRent * 12);
+
+  // BASE MODEL
+  const baseInputs = { price, down, irate, termYears, propTax, hoa, maint, appr,
+    closingPct, sellPct, marketRent, rentInc, invReturn, buyMonthlyCost, deductionBenefit };
+  const { buyTotals, rentTotals, investTotals, breakEven: actualBreakEven } = modelScenario(baseInputs);
+  const breakEvenYr = actualBreakEven || 999;
+
+  // ── SCORING ──────────────────────────────────────────────────────────────
+  let score=100;
+  const risks=[], strengths=[], explanations=[];
+
+  // 1. Housing cost ratio
+  if(housingRatio>0.40){
+    score-=25; risks.push({level:'red',title:'High Housing Burden',detail:`Mortgage is ${(housingRatio*100).toFixed(0)}% of gross income. Lenders cap at 28%.`});
+    explanations.push(`Your mortgage (${fmtDollar(emi)}/mo) consumes <strong>${(housingRatio*100).toFixed(0)}%</strong> of gross income — above the 28% guideline.`);
+  } else if(housingRatio>0.30){
+    score-=10; risks.push({level:'amber',title:'Elevated Housing Cost',detail:`Mortgage is ${(housingRatio*100).toFixed(0)}% of gross income. Manageable but tight.`});
+    explanations.push(`Mortgage is ${(housingRatio*100).toFixed(0)}% of gross income — slightly above 28% guideline but manageable.`);
+  } else {
+    strengths.push({title:'Payment Comfortable',detail:`Mortgage is ${(housingRatio*100).toFixed(0)}% of gross income.`});
+    explanations.push(`Mortgage is <strong>${(housingRatio*100).toFixed(0)}%</strong> of gross income — well within the 28% guideline.`);
+  }
+
+  // 2. DTI
+  if(newDTI>0.43){
+    score-=15; risks.push({level:'red',title:'DTI Too High',detail:`Total debt (${(newDTI*100).toFixed(0)}%) exceeds 43% QM cap. Approval at risk.`});
+    explanations.push(`Total DTI <strong>${(newDTI*100).toFixed(0)}%</strong> — above 43% max for qualified mortgages.`);
+  } else if(newDTI>0.36){
+    score-=5; risks.push({level:'amber',title:'High DTI',detail:`Total debt ${(newDTI*100).toFixed(0)}%. Pay down existing debt before closing.`});
+  }
+
+  // 3. Cash buffer
+  if(cashAfterBuying<0){
+    score-=30; risks.push({level:'red',title:'Negative Cash Position',detail:`You're short ${fmtDollar(Math.abs(cashAfterBuying))} for down payment + closing costs.`});
+    explanations.push(`<strong>You don't have enough liquid cash.</strong> Down (${fmtDollar(down)}) + closing (${fmtDollar(closingCost)}) = ${fmtDollar(down+closingCost)}, but only ${fmtDollar(availableCash)} available.`);
+  } else if(cashAfterBuying<20000){
+    score-=20; risks.push({level:'red',title:'Critically Low Liquidity',detail:`Only ${fmtDollar(cashAfterBuying)} left after buying.`});
+    explanations.push(`After closing, only <strong>${fmtDollar(cashAfterBuying)}</strong> remains. A single HVAC failure or job gap could be catastrophic.`);
+  } else if(cashAfterBuying<50000){
+    score-=10; risks.push({level:'amber',title:'Low Cash Reserves',detail:`${fmtDollar(cashAfterBuying)} after buying. Target 6 months of housing costs.`});
+  } else {
+    strengths.push({title:'Healthy Cash Buffer',detail:`${fmtDollar(cashAfterBuying)} remains after purchase.`});
+  }
+
+  // 4. Timeline vs break-even
+  if(stayYears<breakEvenYr){
+    score-=20; risks.push({level:'red',title:"Won't Break Even",detail:`Stay ${stayYears} yrs, break-even year ${actualBreakEven||'>20'}. Renting is cheaper.`});
+    explanations.push(`You plan to stay <strong>${stayYears} years</strong> but buying doesn't beat renting until <strong>year ${actualBreakEven||'>20'}</strong>.`);
+  } else if(stayYears<breakEvenYr+2){
+    score-=8; risks.push({level:'amber',title:'Tight Timeline',detail:`Break-even year ${actualBreakEven}, staying ${stayYears} — only ${stayYears-actualBreakEven} yr margin.`});
+    explanations.push(`Break-even is year ${actualBreakEven}, you plan ${stayYears} years — only ${stayYears-actualBreakEven} year(s) of upside before an exit.`);
+  } else if(actualBreakEven){
+    strengths.push({title:'Timeline Works',detail:`Year ${actualBreakEven} break-even with ${Math.round(stayYears-actualBreakEven)} yrs upside.`});
+    explanations.push(`Your <strong>${stayYears}-year</strong> timeline clears break-even at year ${actualBreakEven} — ${Math.round(stayYears-actualBreakEven)} years of upside.`);
+  }
+
+  // 5. Visa risk — now uses gracePeriod
+  const highVisaRisk=['h1b','l1','f1_opt'].includes(visaStatus);
+  const medVisaRisk=['gc_pending','tn','o1','e2'].includes(visaStatus);
+  const shortGrace = gracePeriod <= 60;
+  if(highVisaRisk&&jobSec==='low'){
+    score-=20; risks.push({level:'red',title:'Critical Visa + Job Risk',detail:`${visaStatus.toUpperCase()} + low job confidence + ${gracePeriod}-day window. Forced sale risk is very real.`});
+    explanations.push(`<strong>Biggest risk:</strong> ${visaStatus.toUpperCase()} with low job security means a ${gracePeriod}-day window to sell — nearly impossible without a distressed-price sale.`);
+  } else if(highVisaRisk&&shortGrace){
+    score-=10; risks.push({level:'amber',title:'Visa-Dependent',detail:`${visaStatus.toUpperCase()} ties housing to employer. ${gracePeriod}-day window if job is lost.`});
+    explanations.push(`${visaStatus.toUpperCase()} creates a ${gracePeriod}-day forced-exit clock. Build a bridge plan before buying.`);
+  } else if(medVisaRisk){
+    score-=5; risks.push({level:'amber',title:'Immigration Uncertainty',detail:'Some immigration uncertainty. Factor a possible forced exit into your plan.'});
+  } else {
+    strengths.push({title:'Stable Immigration Status',detail:'GC or citizenship removes forced-exit visa risk.'});
+    explanations.push(`GC or citizenship <strong>removes forced-exit visa risk</strong> entirely — you can sell on your own timeline.`);
+  }
+
+  // 6. PMI
+  if(hasPMI){
+    score-=5; risks.push({level:'amber',title:'PMI Required',detail:`LTV ${(ltv*100).toFixed(0)}% → PMI at ${(pmiRate*100).toFixed(2)}% = ${fmtDollar(pmiFee)}/mo until 80% LTV.`});
+  }
+
+  // 7. P/T ratio with market-type context
+  if(ptrRatio>ptRed){
+    score-=15; risks.push({level:'red',title:'Very High P/T Ratio',detail:`${ptrRatio.toFixed(1)}x P/T — even for ${marketType.toUpperCase()}, renting is fundamentally cheaper.`});
+    explanations.push(`P/T ratio of <strong>${ptrRatio.toFixed(1)}x</strong> means you'd need exceptional appreciation over many years to justify buying here.`);
+  } else if(ptrRatio>ptAmber){
+    score-=8; risks.push({level:'amber',title:'High Price-to-Rent',detail:`${ptrRatio.toFixed(1)}x P/T. Need strong appreciation + long hold to win.`});
+    explanations.push(`P/T of ${ptrRatio.toFixed(1)}x leans toward renting. You need both appreciation and a long hold.`);
+  } else if(ptrRatio<ptGreen){
+    strengths.push({title:'Favorable P/T Ratio',detail:`${ptrRatio.toFixed(1)}x P/T — good market for buying.`});
+    explanations.push(`P/T of <strong>${ptrRatio.toFixed(1)}x</strong> — this market's prices are reasonable relative to rents.`);
+  }
+
+  // 8. India return
+  if(indiaPlan==='yes_firm'||indiaPlan==='retire'){
+    score-=15; risks.push({level:'red',title:'India Return Conflicts',detail:'Firm India return makes US home very expensive unless rental income covers all costs.'});
+    explanations.push(`A <strong>firm India return</strong> fundamentally challenges this purchase — you'd need the rental scenario to work perfectly.`);
+  } else if(indiaPlan==='yes_soon'){
+    score-=8; risks.push({level:'amber',title:'India Return Likely',detail:'5-7 yr return plan. Verify rental income scenario works first.'});
+  }
+
+  // 9. Dual home
+  if(indiaHome==='buy_soon'){
+    score-=10; risks.push({level:'red',title:'Dual Home Risk',detail:'Two mortgages in two countries doubles exposure. Sequence these purchases.'});
+    explanations.push(`<strong>Two mortgages</strong> in US and India simultaneously — if either income or market dips, you have no room to maneuver.`);
+  }
+
+  // 10. Rental fallback
+  const netRentalMo = rentalIncome*(1-vacancyPct) - emi - propTaxMo - insuranceMo - maintMo;
+  if(exitPlan==='rent'&&netRentalMo<0){
+    score-=10; risks.push({level:'amber',title:"Rental Doesn't Cover Costs",detail:`Net rental: ${fmtDollar(netRentalMo)}/mo. You subsidize from India.`});
+    explanations.push(`Renting this out would cost you <strong>${fmtDollar(Math.abs(netRentalMo))}/month</strong> net — you'd be writing checks from India.`);
+  } else if(exitPlan==='rent'&&netRentalMo>0){
+    strengths.push({title:'Rental Fallback Works',detail:`+${fmtDollar(netRentalMo)}/mo net if you leave and rent.`});
+    explanations.push(`If you return to India and rent this out, you'd earn <strong>+${fmtDollar(netRentalMo)}/month</strong> net — home pays for itself.`);
+  }
+
+  score = Math.max(0, Math.min(100, score));
+
+  // SENSITIVITY (low/base/high appreciation)
+  function runSens(apprOverride){
+    const si={...baseInputs, appr:apprOverride};
+    const {buyTotals:bt, rentTotals:rt, breakEven:be}=modelScenario(si);
+    const idx=Math.min(Math.round(stayYears),20)-1;
+    const diff=rt[idx]-bt[idx];
+    return { diff, beStr:be?'Year '+be:'>20 yrs', verdict:diff>5?'buy':diff<-5?'wait':'caution', appr:apprOverride };
+  }
+  const sensLow  = runSens(Math.max(0, appr-0.02));
+  const sensBase = runSens(appr);
+  const sensHigh = runSens(appr+0.02);
+
+  // CONFIDENCE: scenario-based — do low/base/high agree?
+  const verdicts = [sensLow.verdict, sensBase.verdict, sensHigh.verdict];
+  const allAgree = verdicts.every(v=>v===verdicts[0]);
+  const twoAgree = verdicts.filter(v=>v===verdicts[0]).length>=2 || verdicts.filter(v=>v===verdicts[1]).length>=2;
+  const confidence = allAgree ? 'high' : twoAgree ? 'med' : 'low';
+  const confidenceText = confidence==='high'
+    ? 'High Confidence — all scenarios agree'
+    : confidence==='med'
+    ? 'Medium Confidence — scenarios partially diverge'
+    : 'Low Confidence — outcomes vary widely with assumptions';
+
+  // VERDICT
+  let verdict, verdictSub, verdictClass;
+  if(score>=70){ verdict='BUY'; verdictClass='buy'; verdictSub="Your financial picture supports buying. Manage the flagged risks."; }
+  else if(score>=50){ verdict='CAUTION'; verdictClass='caution'; verdictSub="Buying is possible but specific risks need addressing first."; }
+  else { verdict='WAIT'; verdictClass='wait'; verdictSub="The numbers don't support buying right now."; }
+  if(cashAfterBuying<0){ verdict='WAIT'; verdictClass='wait'; verdictSub="You don't have enough cash for down payment + closing costs."; }
+  else if(stayYears<3){ verdict='WAIT'; verdictClass='wait'; verdictSub="Under 3 years — transaction costs alone will eat any gains."; }
+
+  // STRESS TEST
+  const stressedIncome  = income * (1 - incomeDrop);
+  const stressedEMI     = calcEMI(loan, (irate + rateShock/100)*100, termYears);
+  const stressedHousing = stressedEMI / (stressedIncome/12);
+  const stressedDTI     = (stressedEMI + existDebt) / (stressedIncome/12);
+  const stressedMonthlyCost = stressedEMI + propTaxMo + maintMo + insuranceMo + hoa + pmiFee;
+  const stressedVerdict = stressedHousing>0.50?'DANGEROUS':stressedHousing>0.40?'VERY TIGHT':stressedHousing>0.30?'TIGHT':'MANAGEABLE';
+
+  // CUMULATIVE at stay year
+  const planYrIdx = Math.min(Math.round(stayYears),20)-1;
+  const stayDiff  = rentTotals[planYrIdx] - buyTotals[planYrIdx];
+
+  // FORCED EXIT
+  const correction = correctionVal==='mild'?-0.10:correctionVal==='severe'?-0.25:0;
+  const forcedHomePrice = price*Math.pow(1+appr,forcedSaleYrs)*(1+correction)*0.95;
+  const forcedBalance   = calcAmort(loan,irate*100,termYears,Math.round(forcedSaleYrs)*12).balance;
+  const forcedEquity    = forcedHomePrice - forcedBalance - forcedHomePrice*sellPct - closingCost;
+  const forcedLoss      = down - forcedEquity;
+
+  // RENTAL SCENARIO
+  const rentScenarioNetAnnual = rentalIncome*(1-vacancyPct)*12-(emi+propTaxMo+insuranceMo+maintMo)*12;
+
+  // NEXT STEPS
+  const nextSteps=[];
+  if(verdict==='WAIT'){
+    if(cashAfterBuying<0) nextSteps.push({icon:'💰',title:'Build your down payment',body:`You need ${fmtDollar(Math.abs(cashAfterBuying)+5000)} more. At your income that's ~${Math.round((Math.abs(cashAfterBuying)+5000)/(income*0.20/12))} months of aggressive saving.`});
+    if(stayYears<breakEvenYr&&actualBreakEven) nextSteps.push({icon:'📅',title:'Extend timeline or reduce price',body:`Break-even is year ${actualBreakEven}. Either stay longer or target a home where break-even is within your horizon.`});
+    if(highVisaRisk) nextSteps.push({icon:'🛂',title:'Prioritize your GC filing',body:`File I-140 and lock your priority date now. EB-2 India is 10+ years — every year of delay matters.`});
+  } else if(verdict==='CAUTION'){
+    if(ptrRatio>ptAmber) nextSteps.push({icon:'📍',title:'Look at adjacent markets',body:`20-30 min commute could cut price and bring P/T into buy territory. Re-run with $100-150k lower price.`});
+    if(hasPMI) nextSteps.push({icon:'🏦',title:`Save to 20% down (${fmtDollar(price*0.20)})`,body:`You're at ${(down/price*100).toFixed(0)}% down. Reaching 20% eliminates PMI (${fmtDollar(pmiFee*12)}/yr saved).`});
+    if(highVisaRisk) nextSteps.push({icon:'⚡',title:'Build a forced-exit bridge plan',body:`Before signing: 4-6 month bridge savings, lease-back clause option, real estate attorney on call. ${gracePeriod} days is brutally short.`});
+    nextSteps.push({icon:'🔁',title:'Re-run with pessimistic assumptions',body:`Set appreciation to ${(appr*100-2).toFixed(0)}% and stay years to ${Math.max(1,stayYears-2)}. If result stays Caution or Buy, you have margin.`});
+  } else {
+    nextSteps.push({icon:'✅',title:'Get pre-approved',body:`Your DTI and income support this. Get quotes from 2-3 lenders — a 0.25% rate difference saves ${fmtDollar(loan*0.0025/12)}/month.`});
+    nextSteps.push({icon:'📋',title:'Maintain a 6-month buffer',body:`Keep ${fmtDollar(buyMonthlyCost*6)} in a separate HYSA untouched — even with a green score, job loss + home without buffer is dangerous.`});
+    if(indiaPlan!=='no') nextSteps.push({icon:'🇮🇳',title:'Set up NRO/NRE structure now',body:`Rental income must flow into NRO. Repatriation requires 15CA/15CB. Don't figure this out after the fact.`});
+  }
+
+  // ── RENDER ───────────────────────────────────────────────────────────────
+  $('results-section').style.display='block';
+  $('verdict-card').className='verdict-card '+verdictClass;
+  $('verdict-text').textContent=verdict;
+  $('verdict-sub').textContent=verdictSub;
+  $('score-num').textContent=score;
+  $('confidence-badge').innerHTML=`<div class="conf-dot conf-${confidence}"></div><span>${confidenceText}</span>`;
+
+  // Input summary
+  const visaLabels={citizen:'US Citizen',gc:'Green Card',gc_pending:'GC Pending',h1b:'H-1B',l1:'L-1',o1:'O-1',tn:'TN',e2:'E-2',f1_opt:'F-1/OPT'};
+  const indiaLabels={no:'Not returning',maybe:'Maybe (7-10 yrs)',yes_soon:'Yes (5-7 yrs)',yes_firm:'Yes (~3 yrs)',retire:'Retire in India'};
+  $('input-summary-card').style.display='block';
+  $('input-summary').innerHTML=[
+    ['Income',fmtDollar(income)],['Home Price',fmtDollar(price)],['Down Payment',fmtDollar(down)+' ('+(down/price*100).toFixed(0)+'%)'],['Rate',val('rate')+'%'],
+    ['Stay Years',stayYears+' yrs'],['Visa Status',visaLabels[visaStatus]||visaStatus],['India Plan',indiaLabels[indiaPlan]||indiaPlan],['Market Rent',fmtDollar(marketRent)+'/mo'],
+    ['Prop. Tax',val('prop_tax')+'%'],['Appreciation',val('appreciation')+'%'],['Inv. Return',val('inv_return')+'%'],['Cash Buffer',fmtDollar(cashAfterBuying)]
+  ].map(([l,v])=>`<div class="isumm-item"><div class="isumm-label">${l}</div><div class="isumm-val">${v}</div></div>`).join('');
+
+  // Key Metrics
+  $('metrics-row').innerHTML=`
+    <div class="metric-card highlight">
+      <div class="metric-label">Monthly EMI</div>
+      <div class="metric-val">${fmtDollar(emi)}</div>
+      <div class="metric-sub">${((emi/monthlyIncome)*100).toFixed(0)}% of gross income</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">True Monthly Cost</div>
+      <div class="metric-val">${fmtDollar(buyMonthlyCost)}</div>
+      <div class="metric-sub">EMI + tax + maint + ins${hasPMI?' + PMI':''}</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Cash After Closing</div>
+      <div class="metric-val">${fmtDollar(cashAfterBuying)}</div>
+      <div class="metric-sub">${cashAfterBuying>=0?'Available liquidity':'⚠ Shortfall'}</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">P/T Ratio</div>
+      <div class="metric-val">${ptrRatio.toFixed(1)}x</div>
+      <div class="metric-sub">${ptrRatio<ptGreen?'Favors buying':ptrRatio<ptAmber?'Neutral':'Favors renting'}</div>
+    </div>`;
+
+  // Monthly table
+  const taxNote=itemize?`<small style="color:var(--text-light)"> (−${fmtDollar(deductionBenefit)}/mo, Yr 1 est.)</small>`:'';
+  $('monthly-table').innerHTML=`
+    <thead><tr><th>Cost Item</th><th class="buy-col">Buying</th><th class="rent-col">Renting</th></tr></thead>
+    <tbody>
+      <tr><td>Base Payment</td><td>${fmtDollar(emi)}${taxNote}</td><td>${fmtDollar(marketRent)}</td></tr>
+      <tr><td>Property Tax</td><td>${fmtDollar(propTaxMo)}</td><td>—</td></tr>
+      <tr><td>Insurance</td><td>${fmtDollar(insuranceMo)}</td><td>~${fmtDollar(insuranceMo*0.15)}</td></tr>
+      <tr><td>Maintenance</td><td>${fmtDollar(maintMo)}</td><td>—</td></tr>
+      ${hoa>0?`<tr><td>HOA</td><td>${fmtDollar(hoa)}</td><td>—</td></tr>`:''}
+      ${hasPMI?`<tr><td>PMI (LTV ${(ltv*100).toFixed(0)}%)</td><td>${fmtDollar(pmiFee)}</td><td>—</td></tr>`:''}
+      <tr><td><strong>True Monthly</strong></td><td><strong>${fmtDollar(buyMonthlyCost)}</strong></td><td><strong>${fmtDollar(marketRent)}</strong></td></tr>
+      <tr><td>Monthly Gap</td><td colspan="2" style="text-align:center;font-weight:700;color:${buyMonthlyCost>marketRent?'var(--red)':'var(--green)'}">
+        ${buyMonthlyCost>marketRent?'Buying costs '+fmtDollar(buyMonthlyCost-marketRent)+' more/mo':'Buying saves '+fmtDollar(marketRent-buyMonthlyCost)+'/mo'}
+      </td></tr>
+    </tbody>`;
+
+  // Risk list
+  $('risk-list').innerHTML=[...risks,...strengths.map(s=>({...s,level:'green'}))].map(r=>`
+    <div class="risk-item risk-${r.level}"><div class="risk-dot"></div>
+    <div class="risk-text"><strong>${r.title}</strong><span>${r.detail}</span></div></div>`).join('');
+
+  // Break-even
+  if(actualBreakEven){
+    $('be-val').textContent='Year '+actualBreakEven;
+    const margin=stayYears-actualBreakEven;
+    $('be-note').textContent=margin>2
+      ?`You plan to stay ${Math.round(stayYears)} years — ${margin.toFixed(0)} years past break-even. Buying creates real value.`
+      :margin>0
+      ?`You plan to stay ${Math.round(stayYears)} years — only ${margin.toFixed(0)} yr(s) past break-even. Very tight.`
+      :`Your ${Math.round(stayYears)}-year plan doesn't reach the year-${actualBreakEven} break-even.`;
+  } else {
+    $('be-val').textContent='>20 yrs';
+    $('be-note').textContent='Buying never becomes cheaper than renting within 20 years at these numbers.';
+  }
+
+  // Year table
+  let thtml='<thead><tr><th>Year</th><th>Buy Net</th><th>Rent Total</th><th>Buy vs Rent</th><th>Equity</th><th>Invest Alt.</th></tr></thead><tbody>';
+  [1,2,3,4,5,7,10,15,20].forEach(y=>{
+    if(y>20) return;
+    const idx=y-1, homeVal=price*Math.pow(1+appr,y);
+    const bal=calcAmort(loan,irate*100,termYears,y*12).balance;
+    const diff=rentTotals[idx]-buyTotals[idx];
+    const atPlan=Math.round(stayYears)===y;
+    thtml+=`<tr style="${atPlan?'background:var(--cream-dark);font-weight:700':''}">
+      <td>Yr ${y}${atPlan?' ← you':''}</td>
+      <td>$${buyTotals[idx]}k</td><td>$${rentTotals[idx]}k</td>
+      <td class="${diff>0?'win':'lose'}">${diff>0?'Buy +$'+diff+'k':'Rent +$'+Math.abs(diff)+'k'}</td>
+      <td>$${Math.round((homeVal-bal)/1000)}k</td>
+      <td>$${investTotals[idx]}k</td></tr>`;
+  });
+  $('year-table').innerHTML=thtml+'</tbody>';
+
+  // Scenarios
+  $('scenario-grid').innerHTML=`
+    <div class="scenario-card ${stayDiff>0?'green-bg':'red-bg'}">
+      <div class="scenario-title">A: Stay ${Math.round(stayYears)} Years</div>
+      <div class="scenario-val">${stayDiff>0?'Buy saves $'+Math.abs(stayDiff)+'k':'Rent saves $'+Math.abs(stayDiff)+'k'}</div>
+      <div class="scenario-desc">Net position vs renting after equity and all costs.</div>
+    </div>
+    <div class="scenario-card ${forcedLoss>50000?'red-bg':forcedLoss>0?'amber-bg':'green-bg'}">
+      <div class="scenario-title">B: Forced Exit Yr ${Math.round(forcedSaleYrs)}</div>
+      <div class="scenario-val">${forcedLoss>0?'−'+fmtDollar(forcedLoss)+' loss':'+'+fmtDollar(Math.abs(forcedLoss))}</div>
+      <div class="scenario-desc">Includes 5% panic-sale discount${correctionVal!=='none'?', '+correctionVal+' correction':''}.</div>
+    </div>
+    <div class="scenario-card ${rentScenarioNetAnnual>0?'green-bg':'amber-bg'}">
+      <div class="scenario-title">C: Rent It Out & Leave</div>
+      <div class="scenario-val">${rentScenarioNetAnnual>0?'+'+fmtDollar(rentScenarioNetAnnual)+'/yr':fmtDollar(rentScenarioNetAnnual)+'/yr'}</div>
+      <div class="scenario-desc">Net after mortgage, tax, insurance, maintenance, vacancy and management.</div>
+    </div>`;
+
+  // Stress Test
+  const sHClass = stressedHousing>0.50?'bad':stressedHousing>0.40?'warn':stressedHousing>0.30?'warn':'ok';
+  const sDClass  = stressedDTI>0.50?'bad':stressedDTI>0.43?'warn':'ok';
+  $('stress-grid').innerHTML=`
+    <div class="stress-card">
+      <div class="stress-card-title">📉 Income Drop ${(incomeDrop*100).toFixed(0)}%</div>
+      <div class="stress-row"><span class="sl">Stressed Income</span><span class="sv">${fmtDollar(stressedIncome)}/yr</span></div>
+      <div class="stress-row"><span class="sl">Housing Ratio</span><span class="sv ${stressedHousing>0.40?'bad':stressedHousing>0.30?'warn':'ok'}">${(stressedHousing*100).toFixed(0)}%</span></div>
+      <div class="stress-row"><span class="sl">Total DTI</span><span class="sv ${stressedDTI>0.43?'bad':stressedDTI>0.36?'warn':'ok'}">${(stressedDTI*100).toFixed(0)}%</span></div>
+      <div class="stress-note">${stressedHousing>0.50?'⚠ Dangerously unaffordable at reduced income.':stressedHousing>0.40?'⚠ Very tight — leaves almost no room for other expenses.':'Manageable even at reduced income.'}</div>
+    </div>
+    <div class="stress-card">
+      <div class="stress-card-title">📈 Rate Shock +${rateShock}%</div>
+      <div class="stress-row"><span class="sl">Shocked Rate</span><span class="sv">${(irate*100+rateShock).toFixed(1)}%</span></div>
+      <div class="stress-row"><span class="sl">New EMI</span><span class="sv ${stressedEMI>emi*1.2?'bad':stressedEMI>emi*1.1?'warn':'ok'}">${fmtDollar(stressedEMI)}/mo</span></div>
+      <div class="stress-row"><span class="sl">Extra Monthly</span><span class="sv ${stressedEMI-emi>500?'bad':stressedEMI-emi>200?'warn':'ok'}">+${fmtDollar(stressedEMI-emi)}/mo</span></div>
+      <div class="stress-note">${stressedEMI-emi>800?'This rate increase would add a significant burden — refinance risk is real.':stressedEMI-emi>300?'Noticeable but manageable increase.':'Rate shock has limited impact at your income level.'}</div>
+    </div>
+    <div class="stress-card">
+      <div class="stress-card-title">🌩️ Combined Worst Case</div>
+      <div class="stress-row"><span class="sl">Income drop + rate shock</span><span class="sv"></span></div>
+      <div class="stress-row"><span class="sl">Monthly Payment</span><span class="sv ${sHClass}">${fmtDollar(stressedMonthlyCost)}/mo</span></div>
+      <div class="stress-row"><span class="sl">% of Stressed Income</span><span class="sv ${sHClass}">${((stressedMonthlyCost/(stressedIncome/12))*100).toFixed(0)}%</span></div>
+      <div class="stress-note"><strong>${stressedVerdict}</strong> — ${stressedHousing>0.50?'At these stress levels this home becomes unaffordable. You need a very strong emergency fund.':stressedHousing>0.40?'At worst case, this gets very tight. 6-month buffer is not optional.':'Even in the worst case, this remains within limits.'}</div>
+    </div>`;
+
+  // NRI flags
+  const nriItems=[];
+  if(highVisaRisk) nriItems.push({level:'amber',title:'FIRPTA Withholding Risk',detail:'Selling while NRA: buyer withholds 15% of price under FIRPTA. Plan residency status for sale year.'});
+  if(!capGains&&stayYears>2) nriItems.push({level:'amber',title:'Capital Gains Exclusion',detail:'Need 2-of-5 years primary residence to exclude $250k/$500k. Long rental periods can cost you this.'});
+  if(indiaPlan!=='no') nriItems.push({level:'amber',title:'RNOR Window Planning',detail:'RNOR window (2-3 yrs after return) shields US rental income from Indian tax. Coordinate timing with cross-border CPA.'});
+  if(indiaHome==='buy_soon') nriItems.push({level:'red',title:'RBI Repatriation Limits',detail:'NRIs can repatriate up to $1M/yr from NRO. Plan banking structure before buying in both countries.'});
+  nriItems.push({level:'amber',title:'NRO/NRE Account Structure',detail:'Rental income → NRO. Repatriation requires 15CA/15CB. Set up banking before you leave.'});
+  if(visaStatus==='h1b'||visaStatus==='l1') nriItems.push({level:'amber',title:'60-Day Grace Period Reality',detail:'Job loss → '+gracePeriod+'-day clock. Selling a house this fast typically means a 5-15% discount. Have a bridge plan ready.'});
+  nriItems.push({level:'green',title:'Section 54F / India Tax Planning',detail:'Sell and reinvest in Indian property → Section 54F may shelter Indian capital gains. Plan timeline with a cross-border advisor.'});
+  $('nri-flags').innerHTML=nriItems.map(r=>`
+    <div class="risk-item risk-${r.level}"><div class="risk-dot"></div>
+    <div class="risk-text"><strong>${r.title}</strong><span>${r.detail}</span></div></div>`).join('');
+
+  // Explanation
+  $('explanation-list').innerHTML=explanations.map((e,i)=>`
+    <div class="expl-item"><div class="expl-num">${i+1}</div><div class="expl-text">${e}</div></div>`).join('');
+
+  // Sensitivity (appreciation spread)
+  function sensCard(s,label,cls){
+    const vc=s.verdict==='buy'?'sv-buy':s.verdict==='wait'?'sv-wait':'sv-caution';
+    const vt=s.verdict==='buy'?'Buying wins':s.verdict==='wait'?'Renting wins':'Marginal';
+    return `<div class="sens-card ${cls}">
+      <div class="sens-label">${label} (${(s.appr*100).toFixed(1)}% appr.)</div>
+      <div class="sens-row"><span>Break-even</span><span>${s.beStr}</span></div>
+      <div class="sens-row"><span>At yr ${Math.round(stayYears)}</span><span>${s.diff>0?'Buy +$'+s.diff+'k':'Rent +$'+Math.abs(s.diff)+'k'}</span></div>
+      <div class="sens-verdict ${vc}">${vt}</div></div>`;
+  }
+  $('sensitivity-grid').innerHTML=sensCard(sensLow,'Low Scenario','sens-low')+sensCard(sensBase,'Base Scenario','sens-base')+sensCard(sensHigh,'High Scenario','sens-high');
+
+  // Next steps
+  $('next-steps').innerHTML=nextSteps.map(s=>`
+    <div class="next-item"><div class="next-icon">${s.icon}</div>
+    <div class="next-body"><strong>${s.title}</strong><span>${s.body}</span></div></div>`).join('');
+
+  drawChart(buyTotals, rentTotals, investTotals, Math.round(stayYears), actualBreakEven);
+  setTimeout(()=>$('results-section').scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+
+function drawChart(buyData, rentData, investData, stayYr, breakEvenYr){
+  const canvas=$('costChart'), ctx=canvas.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  const W=canvas.parentElement.offsetWidth, H=260;
+  canvas.width=W*dpr; canvas.height=H*dpr;
+  canvas.style.width=W+'px'; canvas.style.height=H+'px';
+  ctx.scale(dpr,dpr);
+  const PAD={top:20,right:20,bottom:40,left:60};
+  const cw=W-PAD.left-PAD.right, ch=H-PAD.top-PAD.bottom;
+  const years=buyData.length;
+  const allVals=[...buyData,...rentData];
+  const minV=Math.min(...allVals)*0.9, maxV=Math.max(...allVals)*1.1;
+  const xPos=i=>PAD.left+(i/(years-1))*cw;
+  const yPos=v=>PAD.top+(1-(v-minV)/(maxV-minV))*ch;
+  ctx.clearRect(0,0,W,H);
+  ctx.strokeStyle='#E2D8C8'; ctx.lineWidth=1;
+  for(let g=0;g<=4;g++){
+    const y=PAD.top+(g/4)*ch;
+    ctx.beginPath(); ctx.moveTo(PAD.left,y); ctx.lineTo(PAD.left+cw,y); ctx.stroke();
+    ctx.fillStyle='#8891A8'; ctx.font='11px DM Sans'; ctx.textAlign='right';
+    ctx.fillText('$'+Math.round(maxV-(g/4)*(maxV-minV))+'k',PAD.left-6,y+4);
+  }
+  ctx.fillStyle='#8891A8'; ctx.font='11px DM Sans'; ctx.textAlign='center';
+  [1,3,5,7,10,15,20].forEach(y=>{ if(y<=years) ctx.fillText('Yr '+y,xPos(y-1),H-PAD.bottom+16); });
+  if(breakEvenYr&&breakEvenYr<=years){
+    ctx.strokeStyle='rgba(21,23,57,0.25)'; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+    const bx=xPos(breakEvenYr-1);
+    ctx.beginPath(); ctx.moveTo(bx,PAD.top); ctx.lineTo(bx,PAD.top+ch); ctx.stroke();
+    ctx.setLineDash([]); ctx.fillStyle='rgba(21,23,57,0.6)'; ctx.font='bold 10px DM Sans'; ctx.textAlign='center';
+    ctx.fillText('Break-even',bx,PAD.top+8);
+  }
+  if(stayYr<=years){
+    ctx.strokeStyle='rgba(215,174,67,0.5)'; ctx.lineWidth=1.5; ctx.setLineDash([6,4]);
+    const sx=xPos(stayYr-1);
+    ctx.beginPath(); ctx.moveTo(sx,PAD.top); ctx.lineTo(sx,PAD.top+ch); ctx.stroke();
+    ctx.setLineDash([]); ctx.fillStyle='rgba(215,174,67,0.9)'; ctx.font='bold 10px DM Sans'; ctx.textAlign='center';
+    ctx.fillText('Your plan',sx,H-PAD.bottom+30);
+  }
+  function drawLine(data,color,dash=[]){
+    ctx.strokeStyle=color; ctx.lineWidth=2.5; ctx.setLineDash(dash); ctx.beginPath();
+    data.forEach((v,i)=>{ const x=xPos(i),y=yPos(v); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+  drawLine(rentData,'#D7AE43');
+  drawLine(investData,'#2E7D52',[5,3]);
+  drawLine(buyData,'#151739');
+}
+
+window.addEventListener('load',()=>{ loadState(); updatePTR(); updateDownPct(); });
+</script>
+</body>
+</html>
