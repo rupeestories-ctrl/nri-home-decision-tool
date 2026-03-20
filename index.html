@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NRI Home Decision Tool · RupeeStories</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  font-family:'DM Sans',sans-serif;
+  background:#f3f0ea;
+  color:#18203b;
+}
+
+.hero{
+  background:#151739;
+  color:#fff;
+  padding:60px 20px;
+  text-align:center;
+}
+.hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:48px;
+}
+.hero span{color:#d7ae43;}
+
+.sub{
+  max-width:800px;
+  margin:10px auto;
+  color:#ddd;
+}
+
+.container{
+  max-width:1000px;
+  margin:30px auto;
+  padding:20px;
+}
+
+.card{
+  background:#fff;
+  padding:20px;
+  border-radius:18px;
+  margin-bottom:20px;
+}
+
+input,select{
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border-radius:10px;
+  border:1px solid #ccc;
+}
+
+button{
+  background:#151739;
+  color:#fff;
+  padding:14px;
+  border:none;
+  border-radius:999px;
+  cursor:pointer;
+}
+
+.result{
+  font-size:22px;
+  font-weight:600;
+}
+
+.good{color:green;}
+.warn{color:orange;}
+.bad{color:red;}
+
+.section-title{
+  font-weight:600;
+  margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="hero">
+  <h1>NRI <span>Home Decision Tool</span></h1>
+  <div class="sub">
+    Built for r/RupeeStories.  
+    Not just EMI. This tells you if buying actually makes sense for your life.
+  </div>
+</div>
+
+<div class="container">
+
+<div class="card">
+  <div class="section-title">What this does</div>
+  <p>This tool helps you decide whether to buy, wait, or rethink a home purchase as an NRI.</p>
+
+  <div class="section-title">What it considers</div>
+  <ul>
+    <li>Mortgage pressure</li>
+    <li>Liquidity after down payment</li>
+    <li>Visa / move-back risk</li>
+    <li>Rent vs buy gap</li>
+    <li>Rental fallback if you leave</li>
+  </ul>
+</div>
+
+<div class="card">
+
+<input id="income" placeholder="Annual Income (USD)" value="240000">
+<input id="cash" placeholder="Cash Available" value="250000">
+<input id="price" placeholder="Home Price" value="750000">
+<input id="down" placeholder="Down Payment" value="150000">
+<input id="rate" placeholder="Interest Rate (%)" value="6.5">
+<input id="years" placeholder="Years staying in US" value="6">
+<input id="rent" placeholder="Current Rent" value="3000">
+<input id="rent2" placeholder="Rent if you leave" value="3500">
+
+<select id="visa">
+<option value="stable">Stable (GC/Citizen)</option>
+<option value="fragile">Visa dependent</option>
+</select>
+
+<button onclick="calc()">Analyze</button>
+
+</div>
+
+<div class="card">
+<div id="result" class="result">Run analysis</div>
+<div id="details"></div>
+</div>
+
+<div class="card">
+<button onclick="window.print()">Save / Print PDF</button>
+</div>
+
+</div>
+
+<script>
+
+function calc(){
+
+let income=+income.value;
+let cash=+cash.value;
+let price=+price.value;
+let down=+down.value;
+let rate=+rate.value/100/12;
+let years=+years.value;
+let rent=+rent.value;
+let rent2=+rent2.value;
+let visa=visa.value;
+
+let loan=price-down;
+let n=30*12;
+
+let emi=loan*rate*Math.pow(1+rate,n)/(Math.pow(1+rate,n)-1);
+
+let ratio=emi/(income/12)*100;
+let cashLeft=cash-down;
+
+let score=100;
+let risks=[];
+let strengths=[];
+
+if(ratio>40){score-=30;risks.push("Payment too high");}
+else strengths.push("Payment manageable");
+
+if(cashLeft<50000){score-=20;risks.push("Low cash buffer");}
+else strengths.push("Cash buffer ok");
+
+if(years<5){score-=20;risks.push("Short stay risk");}
+
+if(visa=="fragile"){score-=15;risks.push("Visa risk");}
+
+let rental=rent2-emi;
+if(rental<0){score-=10;risks.push("Negative rental if you leave");}
+else strengths.push("Rental fallback works");
+
+let decision,cls;
+
+if(score>70){decision="BUY";cls="good";}
+else if(score>50){decision="CAUTION";cls="warn";}
+else{decision="WAIT";cls="bad";}
+
+result.innerHTML=`<span class="${cls}">${decision}</span> | Score ${score}`;
+
+details.innerHTML=`
+EMI: $${emi.toFixed(0)} <br>
+Income %: ${ratio.toFixed(1)}% <br>
+Cash Left: $${cashLeft} <br><br>
+
+<b>Strengths:</b><br>${strengths.join("<br>")}<br><br>
+<b>Risks:</b><br>${risks.join("<br>")}
+`;
+
+}
+
+</script>
+
+</body>
+</html>
