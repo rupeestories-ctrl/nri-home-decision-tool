@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NRI Home Decision Tool · RupeeStories</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin:0;
+  font-family:'DM Sans',sans-serif;
+  background:#f3f0ea;
+  color:#18203b;
+}
+
+.hero {
+  background:#151739;
+  color:#fff;
+  text-align:center;
+  padding:60px 20px;
+}
+
+.hero h1 {
+  font-family:'Playfair Display',serif;
+  font-size:48px;
+}
+
+.hero span {
+  color:#d7ae43;
+}
+
+.container {
+  max-width:1000px;
+  margin:40px auto;
+  padding:20px;
+}
+
+.card {
+  background:#fff;
+  border-radius:20px;
+  padding:20px;
+  margin-bottom:20px;
+}
+
+input, select {
+  width:100%;
+  padding:12px;
+  margin-top:6px;
+  margin-bottom:16px;
+  border-radius:10px;
+  border:1px solid #ccc;
+  font-size:16px;
+}
+
+button {
+  background:#151739;
+  color:#fff;
+  padding:14px 20px;
+  border:none;
+  border-radius:999px;
+  cursor:pointer;
+}
+
+.result {
+  font-size:20px;
+  font-weight:600;
+}
+
+.good {color:green;}
+.warn {color:orange;}
+.bad {color:red;}
+</style>
+</head>
+
+<body>
+
+<div class="hero">
+  <h1>NRI <span>Home Decision Tool</span></h1>
+  <p>Buy vs Wait vs Risk</p>
+</div>
+
+<div class="container">
+
+<div class="card">
+  <label>Annual Income</label>
+  <input id="income" type="number" value="240000">
+
+  <label>Home Price</label>
+  <input id="price" type="number" value="750000">
+
+  <label>Down Payment</label>
+  <input id="down" type="number" value="150000">
+
+  <label>Interest Rate (%)</label>
+  <input id="rate" type="number" value="6.5">
+
+  <label>Loan Term (years)</label>
+  <input id="term" type="number" value="30">
+
+  <label>Monthly Rent</label>
+  <input id="rent" type="number" value="3000">
+
+  <label>Years Staying in US</label>
+  <input id="years" type="number" value="6">
+
+  <button onclick="calc()">Analyze</button>
+</div>
+
+<div class="card">
+  <div id="result" class="result">Enter values and click analyze</div>
+  <div id="details"></div>
+</div>
+
+</div>
+
+<script>
+
+function calc(){
+  let income = +document.getElementById('income').value;
+  let price = +document.getElementById('price').value;
+  let down = +document.getElementById('down').value;
+  let rate = +document.getElementById('rate').value/100/12;
+  let n = document.getElementById('term').value*12;
+  let rent = +document.getElementById('rent').value;
+  let years = +document.getElementById('years').value;
+
+  let loan = price - down;
+
+  let emi = loan * rate * Math.pow(1+rate,n) / (Math.pow(1+rate,n)-1);
+
+  let monthlyIncome = income/12;
+  let ratio = emi / monthlyIncome * 100;
+
+  let score = 100;
+
+  if(ratio>40) score-=30;
+  else if(ratio>30) score-=15;
+
+  if(years<5) score-=20;
+
+  let decision = "";
+  let cls = "";
+
+  if(score>70){
+    decision="BUY";
+    cls="good";
+  } else if(score>50){
+    decision="BUY WITH CAUTION";
+    cls="warn";
+  } else {
+    decision="WAIT";
+    cls="bad";
+  }
+
+  document.getElementById('result').innerHTML =
+    `<span class="${cls}">${decision}</span> | Score: ${score}`;
+
+  document.getElementById('details').innerHTML =
+    `EMI: $${emi.toFixed(0)}<br>
+     Income %: ${ratio.toFixed(1)}%<br>
+     Rent: $${rent}`;
+}
+
+</script>
+
+</body>
+</html>
